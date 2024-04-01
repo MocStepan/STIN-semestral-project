@@ -22,9 +22,11 @@ jobs:
 
     - name: Set execute permissions for backend gradlew
       run: chmod +x ./backend/gradlew
+      working-directory: ./backend
 
     - name: Build backend with Gradle Wrapper
-      run: ./backend/gradlew build
+      run: ./gradlew build
+      working-directory: ./backend
 
   dependency-submission:
     runs-on: ubuntu-latest
