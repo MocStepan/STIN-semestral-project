@@ -24,7 +24,8 @@ jobs:
       run: chmod +x ./backend/gradlew
 
     - name: Build backend with Gradle Wrapper
-      run: ./backend/gradlew build
+      run: ./gradlew build
+      working-directory: ./backend
 
   dependency-submission:
     runs-on: ubuntu-latest
