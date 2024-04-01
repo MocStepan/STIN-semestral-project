@@ -1,6 +1,6 @@
-package com.tul.stin.weather.controller
+package com.tul.backend.weather.controller
 
-import com.tul.stin.weather.service.WeatherService
+import com.tul.backend.weather.service.WeatherService
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping

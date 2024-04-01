@@ -1,4 +1,4 @@
-package com.tul.stin.weather.service
+package com.tul.backend.weather.service
 
 import org.springframework.stereotype.Service
 
