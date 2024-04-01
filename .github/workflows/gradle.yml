@@ -25,8 +25,7 @@ jobs:
       working-directory: ./backend
 
     - name: Build backend with Gradle Wrapper
-      run: ./gradlew build
-      working-directory: ./backend
+      run: ./backend/gradlew build
 
   dependency-submission:
     runs-on: ubuntu-latest
