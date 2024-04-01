@@ -1,4 +1,4 @@
-package com.tul.stin.weather.dto
+package com.tul.backend.weather.dto
 
 import java.time.LocalDateTime
 
