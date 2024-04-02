@@ -4,7 +4,7 @@ on:
   push:
     branches: "*"
   pull_request:
-    branches: ["features","main","fix"]
+    branches: "*"
 
 jobs:
   build:
@@ -68,3 +68,9 @@ jobs:
     - name: Generate Jacoco report
       run: ./gradlew jacocoTestReport
       working-directory: ./backend
+      
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v4.0.1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        slug: MocStepan/STIN-semestral-project
