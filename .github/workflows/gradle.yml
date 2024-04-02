@@ -31,8 +31,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    steps:
+    steps:s
     - uses: actions/checkout@v4
+    - working-directory: ./backend
 
     - name: Set up JDK 17 for backend
       uses: actions/setup-java@v4
@@ -41,4 +42,4 @@ jobs:
         distribution: 'temurin'
 
     - name: Generate and submit dependency graph
-      uses: backend/gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
