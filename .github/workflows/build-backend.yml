@@ -1,12 +1,11 @@
 name: Build backend
+run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
   push:
-    branches:
-      - *
+    branches: "*"
   pull_request:
-    branches:
-      - *
+    branches: "*"
 
 jobs:
   backend:
@@ -41,5 +40,6 @@ jobs:
        uses: codecov/codecov-action@v4.0.1
        with:
          token: ${{ secrets.CODECOV_TOKEN }}
-         slug: MocStepan/STIN-semestral-project
+         flags: backend
+         slugs: ${{ github.repository }}
          file: backend/build/reports/jacoco/test/html/jacocoTestReport.xml
