@@ -41,5 +41,5 @@ jobs:
        with:
          token: ${{ secrets.CODECOV_TOKEN }}
          flags: backend
-         slugs: ${{ github.repository }}
+         slug: ${{ github.repository }}
          file: backend/build/reports/jacoco/test/html/jacocoTestReport.xml
