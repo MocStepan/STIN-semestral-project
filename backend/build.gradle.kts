@@ -27,6 +27,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-web")
   implementation("org.springframework.boot:spring-boot-starter-web-services")
+  implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
   implementation("org.jetbrains.kotlin:kotlin-reflect")
   runtimeOnly("org.postgresql:postgresql")
@@ -55,17 +56,19 @@ tasks.test {
   finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
-jacoco {
-  toolVersion = "0.8.11"
-  reportsDirectory = layout.buildDirectory.dir("customJacocoReportDir")
-}
-
 tasks.jacocoTestReport {
-  dependsOn(tasks.test) // tests are required to run before generating the report
   reports {
-    xml.required = false
-    csv.required = false
-    html.outputLocation = layout.buildDirectory.dir("reports/jacoco/test/html")
+    xml.required = true
+  }
+  dependsOn(tasks.test) // tests are required to run before generating the report
+}
+tasks.jacocoTestCoverageVerification {
+  violationRules {
+    rule {
+      limit {
+        minimum = BigDecimal("0.8")
+      }
+    }
   }
 }
 
