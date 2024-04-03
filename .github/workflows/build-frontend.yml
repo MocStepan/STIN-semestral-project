@@ -27,18 +27,16 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
-    - run: npm ci
+      run: npm ci
 
     - name: Install Angular CLI
-    - run: npm install -g @angular/cli
+      run: npm install -g @angular/cli
 
     - name: Run build
-    - run: npm run build --if-present
+      run: npm run build --if-present
 
-
-    -  name: Run test
-    - run: npm test
-    - run: ng test --code-coverage --watch=false
+    - name: Run test
+      run: ng test --code-coverage --watch=false
 
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v4.0.1
