@@ -17,6 +17,10 @@ jobs:
         working-directory: frontend
     steps:
       - uses: actions/checkout@v3
+
+      - name: Checkout frontend folder
+      - run: cd frontend
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v3
         with:
