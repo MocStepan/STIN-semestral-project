@@ -35,7 +35,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.security:spring-security-test")
   testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-  testImplementation("org.mockito.kotlin:mockito-kotlin:5.3.0")
+  testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.0")
 
   compile("org.springframework.boot:spring-boot-starter-webflux")
 }
