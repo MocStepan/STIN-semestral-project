@@ -38,5 +38,4 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           flags: frontend
-          slug: ${{ github.repository }}
           file: frontend/coverage/lcov-report/lcov.info
