@@ -16,16 +16,12 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v3
-      - name: Checkout frontend folder
-        run: cd frontend
-
-      - uses: actions/checkout@v3
-      - name: Use Node.js 20.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 20.x
-          cache: 'npm'
+      - uses: actions/checkout@v2
+      - name: build
+        run: |
+          cd example/angular
+          npm install
+          npx ng build --prod
 
       - name: npm install and npm run CI commands
         run: |
