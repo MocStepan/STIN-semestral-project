@@ -19,7 +19,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: build
         run: |
-          cd example/angular
+          cd frontend
           npm install
           npx ng build --prod
 
