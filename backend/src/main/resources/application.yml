@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: backend
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
   datasource:
     driverClassName: org.postgresql.Driver
   jpa:
