@@ -6,6 +6,6 @@ import org.springframework.stereotype.Service
 class WeatherService {
     fun getActualWeather(): String? {
 
-        return null
+        return "ahoj"
     }
 }

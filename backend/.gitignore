@@ -38,3 +38,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### custom ###
+config/application.yml
