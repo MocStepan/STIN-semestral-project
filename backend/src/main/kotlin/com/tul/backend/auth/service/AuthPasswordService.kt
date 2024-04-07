@@ -11,15 +11,17 @@ private val log = KotlinLogging.logger {}
 
 @Service
 class AuthPasswordService(
-  private val encoder: PasswordEncoder = PasswordEncoder()
+    private val encoder: PasswordEncoder = PasswordEncoder(),
 ) {
+    fun login(
+        loginDTO: LoginDTO,
+        authUser: AuthUser,
+    ): AuthUserDTO? {
+        if (!encoder.matches(loginDTO.password, authUser.password)) {
+            log.warn { "Invalid password for user: ${authUser.email.value}" }
+            return null
+        }
 
-  fun login(loginDTO: LoginDTO, authUser: AuthUser): AuthUserDTO? {
-    if(!encoder.matches(loginDTO.password, authUser.password)) {
-      log.warn { "Invalid password for user: ${authUser.email.value}" }
-      return null
+        return null
     }
-
-    return null
-  }
 }

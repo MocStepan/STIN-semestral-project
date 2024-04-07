@@ -14,7 +14,6 @@ class AuthUserService(
     private val authUserRepository: AuthUserRepository,
     private val authPasswordService: AuthPasswordService,
 ) {
-
     fun login(loginDTO: LoginDTO): AuthUserDTO? {
         if (!loginDTO.isValid()) {
             log.warn { "LoginDTO: $loginDTO is invalid" }
