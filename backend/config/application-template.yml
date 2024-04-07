@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: [ localDev ]
+
+---
+spring:
+  config:
+    activate:
+      on-profile: localDev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/stin
+    username: postgres
+    password: postgres
+  security:
+    basic:
+      enabled: false
+    user:
+      name: admin
+      password: admin

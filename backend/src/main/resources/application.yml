@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: backend
+  datasource:
+    driverClassName: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.lob.non_contextual_creation: true # for postgresql
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        use_nationalized_character_data: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        show_sql: false
+        default_schema: public
