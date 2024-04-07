@@ -10,7 +10,7 @@ export class AuthService {
 
   constructor(private httpService: HttpService) {
   }
-  
+
   getAuth(): Observable<string> {
     return this.httpService.get(API_URL + '/actual-weather')
   }
