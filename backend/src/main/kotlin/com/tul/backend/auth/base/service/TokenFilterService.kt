@@ -41,7 +41,6 @@ class TokenFilterService(
     authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
     SecurityContextHolder.getContext().authentication = authToken
-    tokenService.updateContext(userDetails, request, response)
   }
 
   private fun extractEmailAndToken(request: HttpServletRequest): Pair<String?, String?> {

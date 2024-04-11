@@ -133,7 +133,7 @@ class TokenServiceTests : FeatureSpec({
 
       every { response.addCookie(any()) } just runs
 
-      spec.tokenService.updateContext(userDetails, request, response)
+      spec.tokenService.updateContext("token", request, response)
     }
   }
 })

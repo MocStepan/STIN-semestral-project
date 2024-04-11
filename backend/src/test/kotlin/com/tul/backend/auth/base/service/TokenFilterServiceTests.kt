@@ -5,9 +5,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
-import io.mockk.runs
 import io.mockk.verify
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -142,13 +140,9 @@ class TokenFilterServiceTests : FeatureSpec({
       every { request.remoteAddr } returns "remoteAddr"
       every { request.getSession(false) } returns session
       every { session.id } returns "sessionId"
-      every { spec.tokenService.updateContext(userDetails, request, response) } just runs
 
       spec.tokenFilterService.updateContext(userDetails, request, response)
-
-      verify { spec.tokenService.updateContext(userDetails, request, response) }
     }
-
   }
 })
 
