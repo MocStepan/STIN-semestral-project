@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class TokenFilterService(
-  @Qualifier("customUserDetailsService") private val userDetailsService: UserDetailsService,
-  private val tokenService: TokenService
+    @Qualifier("customUserDetailsService") private val userDetailsService: UserDetailsService,
+    private val tokenService: TokenService
 ) {
 
   fun validateRequest(request: HttpServletRequest): UserDetails? {
@@ -29,14 +29,14 @@ class TokenFilterService(
   }
 
   fun updateContext(
-    userDetails: UserDetails,
-    request: HttpServletRequest,
-    response: HttpServletResponse,
+      userDetails: UserDetails,
+      request: HttpServletRequest,
+      response: HttpServletResponse,
   ) {
     val authToken = UsernamePasswordAuthenticationToken(
-      userDetails,
-      null,
-      userDetails.authorities
+        userDetails,
+        null,
+        userDetails.authorities
     )
     authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 

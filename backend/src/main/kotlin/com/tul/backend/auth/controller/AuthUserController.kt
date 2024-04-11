@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api")
 class AuthUserController(
-  private val authUserService: AuthUserService,
+    private val authUserService: AuthUserService,
 ) {
 
   @PostMapping("/auth/login")
   fun login(
-    @RequestBody loginDTO: LoginDTO,
-    response: HttpServletResponse,
-    request: HttpServletRequest
+      @RequestBody loginDTO: LoginDTO,
+      response: HttpServletResponse,
+      request: HttpServletRequest
   ): ResponseEntity<String?> {
     val responseDTO = authUserService.login(loginDTO, request, response)
     val status = if (responseDTO != null) HttpStatus.OK else HttpStatus.NOT_FOUND
@@ -32,7 +32,7 @@ class AuthUserController(
 
   @PostMapping("/auth/logout")
   fun logout(
-    @RequestBody userId: Long,
+      @RequestBody userId: Long,
   ): ResponseEntity<Boolean> {
     val response = authUserService.logout(userId)
     val status = if (response) HttpStatus.OK else HttpStatus.NOT_FOUND
@@ -41,7 +41,7 @@ class AuthUserController(
 
   @PostMapping("/auth/register")
   fun register(
-    @RequestBody registerDTO: RegisterDTO,
+      @RequestBody registerDTO: RegisterDTO,
   ): ResponseEntity<AuthUserDTO?> {
     val response = authUserService.register(registerDTO)
     val status = if (response != null) HttpStatus.OK else HttpStatus.NOT_FOUND

@@ -23,48 +23,48 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableMethodSecurity
 class SecurityConfiguration(
-  private val objectMapper: ObjectMapper,
-  private val authenticationProvider: AuthenticationProvider
+    private val objectMapper: ObjectMapper,
+    private val authenticationProvider: AuthenticationProvider
 ) {
   private val userUnsecuredEndpoints =
-    arrayOf(
-      "/api/auth/login",
-      "/api/auth/register",
-    )
+      arrayOf(
+          "/api/auth/login",
+          "/api/auth/register",
+      )
 
   private val adminUnsecuredEndpoints =
-    arrayOf(
-      "api/auth/test"
-    )
+      arrayOf(
+          "api/auth/test"
+      )
 
   @Bean
   fun securityFilterChain(
-    http: HttpSecurity,
-    jwtAuthenticationFilter: JwtAuthenticationFilter
+      http: HttpSecurity,
+      jwtAuthenticationFilter: JwtAuthenticationFilter
   ): DefaultSecurityFilterChain =
-    http
-      .csrf { it.disable() }
-      .cors { it.disable() }
-      .authorizeHttpRequests {
-        it
-          .requestMatchers(*userUnsecuredEndpoints).permitAll()
-          .requestMatchers(*adminUnsecuredEndpoints).hasRole(AuthUserRole.ADMIN.name)
-          .anyRequest().fullyAuthenticated()
-      }
-      .sessionManagement { session: SessionManagementConfigurer<HttpSecurity> ->
-        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-      }
-      .authenticationProvider(authenticationProvider)
-      .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
-      .exceptionHandling {
-        it.authenticationEntryPoint(authenticationExceptionHandler)
-      }
-      .build()
+      http
+          .csrf { it.disable() }
+          .cors { it.disable() }
+          .authorizeHttpRequests {
+            it
+                .requestMatchers(*userUnsecuredEndpoints).permitAll()
+                .requestMatchers(*adminUnsecuredEndpoints).hasRole(AuthUserRole.ADMIN.name)
+                .anyRequest().fullyAuthenticated()
+          }
+          .sessionManagement { session: SessionManagementConfigurer<HttpSecurity> ->
+            session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+          }
+          .authenticationProvider(authenticationProvider)
+          .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+          .exceptionHandling {
+            it.authenticationEntryPoint(authenticationExceptionHandler)
+          }
+          .build()
 
   private val authenticationExceptionHandler =
-    { _: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException ->
-      response.contentType = MediaType.APPLICATION_JSON_VALUE
-      response.status = HttpServletResponse.SC_UNAUTHORIZED
-      objectMapper.writeValue(response.writer, ErrorDTO("${authException.message}"))
-    }
+      { _: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException ->
+        response.contentType = MediaType.APPLICATION_JSON_VALUE
+        response.status = HttpServletResponse.SC_UNAUTHORIZED
+        objectMapper.writeValue(response.writer, ErrorDTO("${authException.message}"))
+      }
 }

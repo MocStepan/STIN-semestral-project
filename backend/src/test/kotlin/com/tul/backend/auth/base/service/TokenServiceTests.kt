@@ -2,8 +2,6 @@ package com.tul.backend.auth.base.service
 
 import com.tul.backend.auth.base.valueobject.AuthUserRole
 import io.jsonwebtoken.ExpiredJwtException
-import io.jsonwebtoken.JwtBuilder
-import io.jsonwebtoken.Jwts
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
@@ -11,10 +9,8 @@ import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.security.config.annotation.rsocket.RSocketSecurity.JwtSpec
 import org.springframework.security.core.userdetails.User
 
 class TokenServiceTests : FeatureSpec({

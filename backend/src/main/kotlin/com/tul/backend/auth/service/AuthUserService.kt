@@ -17,8 +17,8 @@ private val log = KotlinLogging.logger {}
 @Service
 @Transactional
 class AuthUserService(
-  private val authUserRepository: AuthUserRepository,
-  private val authenticationHandler: AuthenticationHandler
+    private val authUserRepository: AuthUserRepository,
+    private val authenticationHandler: AuthenticationHandler
 
 ) {
   fun login(loginDTO: LoginDTO, request: HttpServletRequest, response: HttpServletResponse): String? {

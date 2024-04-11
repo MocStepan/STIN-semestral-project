@@ -128,26 +128,26 @@ class TokenFilterServiceTests : FeatureSpec({
 
   feature("updateContext") {
 
-      scenario("update context") {
-        val spec = getSpec()
-        val request = mockk<HttpServletRequest>()
-        val response = mockk<HttpServletResponse>()
-        val userDetails = User.builder()
-            .username("email")
-            .password("password")
-            .roles(AuthUserRole.ADMIN.name)
-            .build()
-        val session = mockk<HttpSession>()
+    scenario("update context") {
+      val spec = getSpec()
+      val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
+      val userDetails = User.builder()
+          .username("email")
+          .password("password")
+          .roles(AuthUserRole.ADMIN.name)
+          .build()
+      val session = mockk<HttpSession>()
 
-        every { request.remoteAddr } returns "remoteAddr"
-        every { request.getSession(false) } returns session
-        every { session.id } returns "sessionId"
-        every { spec.tokenService.updateContext(userDetails, request, response) } just runs
+      every { request.remoteAddr } returns "remoteAddr"
+      every { request.getSession(false) } returns session
+      every { session.id } returns "sessionId"
+      every { spec.tokenService.updateContext(userDetails, request, response) } just runs
 
-        spec.tokenFilterService.updateContext(userDetails, request, response)
+      spec.tokenFilterService.updateContext(userDetails, request, response)
 
-        verify { spec.tokenService.updateContext(userDetails, request, response) }
-      }
+      verify { spec.tokenService.updateContext(userDetails, request, response) }
+    }
 
   }
 })

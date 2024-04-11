@@ -18,20 +18,20 @@ class JwtConfiguration {
 
   @Bean
   fun userDetailService(authUserRepository: AuthUserRepository): UserDetailsService =
-    CustomUserDetailsService(authUserRepository)
+      CustomUserDetailsService(authUserRepository)
 
   @Bean
   fun encoder(): PasswordEncoder = CustomPasswordEncoder()
 
   @Bean
   fun authenticationProvider(authUserRepository: AuthUserRepository): AuthenticationProvider =
-    DaoAuthenticationProvider()
-      .also {
-        it.setUserDetailsService(userDetailService(authUserRepository))
-        it.setPasswordEncoder(encoder())
-      }
+      DaoAuthenticationProvider()
+          .also {
+            it.setUserDetailsService(userDetailService(authUserRepository))
+            it.setPasswordEncoder(encoder())
+          }
 
   @Bean
   fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager =
-    config.authenticationManager
+      config.authenticationManager
 }
