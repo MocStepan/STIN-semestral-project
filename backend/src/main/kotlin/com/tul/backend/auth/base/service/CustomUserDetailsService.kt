@@ -11,19 +11,19 @@ import org.springframework.stereotype.Service
 @Service
 @Transactional
 class CustomUserDetailsService(
-    private val authUserRepository: AuthUserRepository
+  private val authUserRepository: AuthUserRepository
 ) : UserDetailsService {
   override fun loadUserByUsername(email: String?): UserDetails {
     return authUserRepository.findByEmail(email!!)
-        ?.mapToUserDetails()
-        ?: throw Exception("User not found")
+      ?.mapToUserDetails()
+      ?: throw Exception("User not found")
   }
 
   private fun AuthUser.mapToUserDetails(): UserDetails {
     return User.builder()
-        .username(email.value)
-        .password(password)
-        .roles(this.role.name)
-        .build()
+      .username(email.value)
+      .password(password)
+      .roles(this.role.name)
+      .build()
   }
 }

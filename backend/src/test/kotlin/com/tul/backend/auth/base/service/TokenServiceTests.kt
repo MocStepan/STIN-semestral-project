@@ -16,10 +16,10 @@ import org.springframework.security.core.userdetails.User
 class TokenServiceTests : FeatureSpec({
 
   val userDetails = User.builder()
-      .username("test@test.cz")
-      .password("password")
-      .roles(AuthUserRole.ADMIN.name)
-      .build()
+    .username("test@test.cz")
+    .password("password")
+    .roles(AuthUserRole.ADMIN.name)
+    .build()
 
   feature("generateAccessToken") {
     scenario("generate access token") {
@@ -64,10 +64,10 @@ class TokenServiceTests : FeatureSpec({
       val tokenService = TokenService("7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250", 0)
 
       val expiredUser = User.builder()
-          .username("test@test.cz")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("test@test.cz")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
 
       val token = tokenService.generateAccessToken(expiredUser)
 
@@ -93,10 +93,10 @@ class TokenServiceTests : FeatureSpec({
       val spec = getSpec()
       val token = spec.tokenService.generateAccessToken(userDetails)
       val invalidUserDetails = User.builder()
-          .username("admin@admin.cz")
-          .password("admin")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("admin@admin.cz")
+        .password("admin")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
 
       val result = spec.tokenService.isValidToken(token, invalidUserDetails)
 

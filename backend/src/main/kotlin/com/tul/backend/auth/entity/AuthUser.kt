@@ -13,22 +13,22 @@ import jakarta.persistence.Id
 
 @Entity
 class AuthUser(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0L,
-    val username: String,
-    override val email: EmailAddress,
-    override var password: String,
-    @Enumerated(EnumType.STRING)
-    val role: AuthUserRole,
-): AuthUserBase {
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  val id: Long = 0L,
+  val username: String,
+  override val email: EmailAddress,
+  override var password: String,
+  @Enumerated(EnumType.STRING)
+  val role: AuthUserRole,
+) : AuthUserBase {
   companion object {
     fun from(registerDTO: RegisterDTO): AuthUser {
       return AuthUser(
-          username = registerDTO.username,
-          email = registerDTO.email,
-          password = registerDTO.password,
-          role = AuthUserRole.USER
+        username = registerDTO.username,
+        email = registerDTO.email,
+        password = registerDTO.password,
+        role = AuthUserRole.USER
       )
     }
   }

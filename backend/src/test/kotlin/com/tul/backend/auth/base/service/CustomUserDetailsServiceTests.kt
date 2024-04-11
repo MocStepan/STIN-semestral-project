@@ -18,10 +18,10 @@ class CustomUserDetailsServiceTests : FeatureSpec({
       val spec = getSpec()
       val authUser = createAuthUser()
       val userDetails = User.builder()
-          .username(authUser.email.value)
-          .password(authUser.password)
-          .roles(authUser.role.name)
-          .build()
+        .username(authUser.email.value)
+        .password(authUser.password)
+        .roles(authUser.role.name)
+        .build()
 
       every { spec.authUserRepository.findByEmail(authUser.email.value) } returns authUser
 
@@ -54,10 +54,10 @@ class CustomUserDetailsServiceTests : FeatureSpec({
 })
 
 private class CustomUserDetailsServiceSpecWrapper(
-    val authUserRepository: AuthUserRepository
+  val authUserRepository: AuthUserRepository
 ) {
   val customUserDetailsService = CustomUserDetailsService(
-      authUserRepository
+    authUserRepository
   )
 }
 

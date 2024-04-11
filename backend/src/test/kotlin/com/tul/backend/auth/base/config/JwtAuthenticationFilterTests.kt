@@ -24,10 +24,10 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val response = mockk<HttpServletResponse>()
       val filterChain = mockk<FilterChain>()
       val authUser = User.builder()
-          .username("email")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("email")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
 
       every { spec.tokenFilterService.validateRequest(request) } returns authUser
       every { spec.tokenFilterService.updateContext(authUser, request, response) } just runs
@@ -44,10 +44,10 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val response = mockk<HttpServletResponse>()
       val filterChain = mockk<FilterChain>()
       val authUser = User.builder()
-          .username("email")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("email")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
 
       every { spec.tokenFilterService.validateRequest(request) } returns null
       every { filterChain.doFilter(request, response) } just runs
@@ -61,31 +61,31 @@ class JwtAuthenticationFilterTests : FeatureSpec({
 })
 
 private val doFilterInternalMethod = ReflectionUtils.findMethod(
-    JwtAuthenticationFilter::class.java,
-    "doFilterInternal",
-    HttpServletRequest::class.java,
-    HttpServletResponse::class.java,
-    FilterChain::class.java
+  JwtAuthenticationFilter::class.java,
+  "doFilterInternal",
+  HttpServletRequest::class.java,
+  HttpServletResponse::class.java,
+  FilterChain::class.java
 ).get()
 
 private class AuthJwtServiceSpecWrapper(
-    val tokenFilterService: TokenFilterService
+  val tokenFilterService: TokenFilterService
 ) {
   val jwtAuthenticationFilter = JwtAuthenticationFilter(
-      tokenFilterService,
+    tokenFilterService,
   )
 
   // via reflection, because the method is protected
   fun doFilterInternal(
-      request: HttpServletRequest,
-      response: HttpServletResponse,
-      filterChain: FilterChain
+    request: HttpServletRequest,
+    response: HttpServletResponse,
+    filterChain: FilterChain
   ) = ReflectionUtils.invokeMethod(
-      doFilterInternalMethod,
-      jwtAuthenticationFilter,
-      request,
-      response,
-      filterChain
+    doFilterInternalMethod,
+    jwtAuthenticationFilter,
+    request,
+    response,
+    filterChain
   )
 }
 

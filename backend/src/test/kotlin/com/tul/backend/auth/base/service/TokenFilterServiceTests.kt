@@ -21,10 +21,10 @@ class TokenFilterServiceTests : FeatureSpec({
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
       val userDetails = User.builder()
-          .username("email")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("email")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
       val securityContext = mockk<SecurityContext>()
 
       every { request.getHeader("Cookie") } returns "access_token=token"
@@ -108,10 +108,10 @@ class TokenFilterServiceTests : FeatureSpec({
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
       val userDetails = User.builder()
-          .username("email")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("email")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
 
       every { request.getHeader("Cookie") } returns "access_token=token"
       every { spec.tokenService.extractEmail("token") } returns "email"
@@ -131,10 +131,10 @@ class TokenFilterServiceTests : FeatureSpec({
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
       val userDetails = User.builder()
-          .username("email")
-          .password("password")
-          .roles(AuthUserRole.ADMIN.name)
-          .build()
+        .username("email")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
       val session = mockk<HttpSession>()
 
       every { request.remoteAddr } returns "remoteAddr"
@@ -147,8 +147,8 @@ class TokenFilterServiceTests : FeatureSpec({
 })
 
 private class TokenFilterServiceSpecWrapper(
-    val userDetailsService: CustomUserDetailsService,
-    val tokenService: TokenService
+  val userDetailsService: CustomUserDetailsService,
+  val tokenService: TokenService
 ) {
   val tokenFilterService = TokenFilterService(userDetailsService, tokenService)
 }
