@@ -2,7 +2,7 @@ package com.tul.backend.auth.base.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tul.backend.auth.base.dto.ErrorDTO
-import com.tul.backend.auth.base.valueobject.UserRole
+import com.tul.backend.auth.base.valueobject.AuthUserRole
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
@@ -48,7 +48,7 @@ class SecurityConfiguration(
       .authorizeHttpRequests {
         it
           .requestMatchers(*userUnsecuredEndpoints).permitAll()
-          .requestMatchers(*adminUnsecuredEndpoints).hasRole(UserRole.ADMIN.name)
+          .requestMatchers(*adminUnsecuredEndpoints).hasRole(AuthUserRole.ADMIN.name)
           .anyRequest().fullyAuthenticated()
       }
       .sessionManagement { session: SessionManagementConfigurer<HttpSecurity> ->

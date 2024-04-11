@@ -19,7 +19,7 @@ class TokenFilterService(
   fun validateRequest(request: HttpServletRequest): UserDetails? {
     val (email, token) = extractEmailAndToken(request)
 
-    if (email != null && token != null && SecurityContextHolder.getContext().authentication == null) {
+    if (email != null && SecurityContextHolder.getContext().authentication == null) {
       val userDetails = userDetailsService.loadUserByUsername(email)
       if (tokenService.isValidToken(token, userDetails)) {
         return userDetails

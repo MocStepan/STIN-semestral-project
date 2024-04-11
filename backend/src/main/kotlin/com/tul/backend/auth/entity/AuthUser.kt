@@ -1,7 +1,7 @@
 package com.tul.backend.auth.entity
 
 import com.tul.backend.auth.base.valueobject.EmailAddress
-import com.tul.backend.auth.base.valueobject.UserRole
+import com.tul.backend.auth.base.valueobject.AuthUserRole
 import com.tul.backend.auth.dto.RegisterDTO
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -12,14 +12,14 @@ import jakarta.persistence.Id
 
 @Entity
 class AuthUser(
-  @Id
+    @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val id: Long = 0L,
-  val username: String,
-  val email: EmailAddress,
-  var password: String,
-  @Enumerated(EnumType.STRING)
-  val role: UserRole,
+    val username: String,
+    val email: EmailAddress,
+    var password: String,
+    @Enumerated(EnumType.STRING)
+  val role: AuthUserRole,
 ) {
   companion object {
     fun from(registerDTO: RegisterDTO): AuthUser {
@@ -27,7 +27,7 @@ class AuthUser(
         username = registerDTO.username,
         email = registerDTO.email,
         password = registerDTO.password,
-        role = UserRole.PAID
+        role = AuthUserRole.PAID
       )
     }
   }

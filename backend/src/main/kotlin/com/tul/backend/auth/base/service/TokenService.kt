@@ -13,8 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.Date
 
-private val log = KotlinLogging.logger {}
-
 @Service
 class TokenService(
   @Value("\${jwt.key}") private val key: String,

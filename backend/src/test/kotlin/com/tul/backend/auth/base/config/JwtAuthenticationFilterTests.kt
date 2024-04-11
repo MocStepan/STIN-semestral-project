@@ -1,8 +1,7 @@
-package com.tul.backend.auth.base
+package com.tul.backend.auth.base.config
 
-import com.tul.backend.auth.base.config.JwtAuthenticationFilter
 import com.tul.backend.auth.base.service.TokenFilterService
-import com.tul.backend.auth.base.valueobject.UserRole
+import com.tul.backend.auth.base.valueobject.AuthUserRole
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.every
 import io.mockk.just
@@ -27,7 +26,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val authUser = User.builder()
         .username("email")
         .password("password")
-        .roles(UserRole.ADMIN.name)
+        .roles(AuthUserRole.ADMIN.name)
         .build()
 
       every { spec.tokenFilterService.validateRequest(request) } returns authUser
@@ -47,7 +46,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val authUser = User.builder()
         .username("email")
         .password("password")
-        .roles(UserRole.ADMIN.name)
+        .roles(AuthUserRole.ADMIN.name)
         .build()
 
       every { spec.tokenFilterService.validateRequest(request) } returns null

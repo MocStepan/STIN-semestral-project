@@ -1,6 +1,6 @@
 package com.tul.backend.auth.base.valueobject
 
-enum class UserRole {
+enum class AuthUserRole {
   PAID,
   ADMIN
 }
