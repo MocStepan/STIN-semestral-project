@@ -3,9 +3,9 @@ run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
   push:
-    branches: "*"
+    branches: ["main"]
   pull_request:
-    branches: "*"
+    branches: ["main"]
 
 jobs:
   backend:
