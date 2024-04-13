@@ -111,16 +111,18 @@ class TokenServiceTests : FeatureSpec({
       }
     }
 
-    scenario("token is expired") {
-      val spec = getSpec()
-      val mockkTokenService = mockk<TokenService>()
-      val token = spec.tokenService.generateAccessToken(userDetails)
+    scenario("invalid token - expired") {
+      val tokenService = TokenService("7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250", -6000)
+      val expiredUser = User.builder()
+        .username("test@test.cz")
+        .password("password")
+        .roles(AuthUserRole.ADMIN.name)
+        .build()
+      val token = tokenService.generateAccessToken(expiredUser)
 
-      every { mockkTokenService.isTokenExpired(token) } returns true
-
-      val result = spec.tokenService.isValidToken(token, userDetails)
-
-      result shouldBe true
+      shouldThrow<ExpiredJwtException> {
+        tokenService.isValidToken(token, expiredUser)
+      }
     }
   }
 
