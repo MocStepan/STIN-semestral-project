@@ -72,7 +72,7 @@ class SecurityConfiguration(
       }
       .build()
 
-  private val authenticationExceptionHandler =
+  val authenticationExceptionHandler =
     { _: HttpServletRequest, response: HttpServletResponse, authException: AuthenticationException ->
       response.contentType = MediaType.APPLICATION_JSON_VALUE
       response.status = HttpServletResponse.SC_UNAUTHORIZED
