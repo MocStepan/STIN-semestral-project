@@ -6,8 +6,6 @@ class BackendApplicationTests : FeatureSpec({
 
   feature("Context loads") {
     scenario("When application is started") {
-
     }
   }
-
 })

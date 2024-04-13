@@ -1,0 +1,29 @@
+# @name login - ADMIN
+POST {{BACKEND}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{adminEmail}}",
+  "password": "{{adminPassword}}"
+}
+
+###
+# @name login - USER
+POST {{BACKEND}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}"
+}
+
+###
+# @name register
+POST {{BACKEND}}/api/v1/register
+Content-Type: application/json
+
+{
+  "email": "{{userEmail}}",
+  "password": "{{userPassword}}",
+  "name": "John Doe"
+}

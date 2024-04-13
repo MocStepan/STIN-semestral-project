@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: backend
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
   datasource:
     driverClassName: org.postgresql.Driver
   jpa:
@@ -17,3 +19,7 @@ spring:
           use_jdbc_metadata_defaults: false
         show_sql: false
         default_schema: public
+jwt:
+  key: "7A25432A462D4A614E645267556B58703272357538782F413F4428472B4B6250" # random string in base64
+  access-token-expiration: 3600000
+  refresh-token-expiration: 86400000

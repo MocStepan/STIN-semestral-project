@@ -10,14 +10,12 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api")
 class WeatherController(
-    private val weatherService: WeatherService
+  private val weatherService: WeatherService,
 ) {
-
-
-    @GetMapping("/actual-weather")
-    fun getActualWeather(): ResponseEntity<String?> {
-        val response = weatherService.getActualWeather()
-        val status = if (response != null) HttpStatus.OK else HttpStatus.NOT_FOUND
-        return ResponseEntity(response, status)
-    }
+  @GetMapping("/auth/weather/actual-weather")
+  fun getActualWeather(): ResponseEntity<String?> {
+    val response = weatherService.getActualWeather()
+    val status = if (response != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+    return ResponseEntity(response, status)
+  }
 }
