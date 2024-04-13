@@ -5,7 +5,6 @@ import com.tul.backend.auth.base.service.TokenService
 import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.auth.entity.AuthUser
-import com.tul.backend.auth.repository.AuthUserRepository
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.transaction.Transactional
@@ -21,8 +20,7 @@ class AuthenticationHandler(
   private val authManager: AuthenticationManager,
   @Qualifier("customUserDetailsService") private val userDetailsService: UserDetailsService,
   private val tokenService: TokenService,
-  private val customPasswordEncoder: CustomPasswordEncoder,
-  private val authUserRepository: AuthUserRepository
+  private val customPasswordEncoder: CustomPasswordEncoder
 ) {
   fun authenticate(
     loginDTO: LoginDTO,

@@ -6,9 +6,9 @@ import com.tul.backend.auth.entity.AuthUser
 
 fun createAuthUser(
   id: Long = 0L,
-  username: String = "username",
-  email: EmailAddress = EmailAddress("email"),
-  password: String = "password",
+  username: String = "admin",
+  email: EmailAddress = EmailAddress("admin@admin.cz"),
+  password: String = "admin",
   role: AuthUserRole = AuthUserRole.ADMIN
 ): AuthUser {
   return AuthUser(
