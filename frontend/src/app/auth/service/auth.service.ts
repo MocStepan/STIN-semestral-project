@@ -27,15 +27,15 @@ export class AuthService {
     })
   }
 
-  private setLoggedIn() {
-    sessionStorage.setItem('auth', `true`)
-  }
-
   setLogout() {
     sessionStorage.removeItem('auth')
   }
 
   register(value: RegistrationForm): Observable<Boolean> {
     return this.httpService.post(API_URL + '/auth/register', value)
+  }
+
+  private setLoggedIn() {
+    sessionStorage.setItem('auth', `true`)
   }
 }

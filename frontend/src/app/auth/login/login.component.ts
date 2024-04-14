@@ -38,24 +38,14 @@ import {Router} from "@angular/router";
   ]
 })
 export class LoginComponent implements OnInit {
+  formGroup!: FormGroup
   private formBuilder = inject(FormBuilder)
   private authService = inject(AuthService)
   private notificationService = inject(FrontendNotificationService)
   private router = inject(Router)
-  formGroup!: FormGroup
-
 
   ngOnInit(): void {
     this.formGroup = this.buildFormGroup()
-  }
-
-  private buildFormGroup() {
-    const form: LoginForm = {
-      email: [null, [Validators.email, Validators.required]],
-      password: [null, [Validators.required]]
-    }
-
-    return this.formBuilder.group(form)
   }
 
   onSubmit() {
@@ -76,5 +66,14 @@ export class LoginComponent implements OnInit {
 
   openRegistrationForm() {
     this.router.navigate(['/registration'])
+  }
+
+  private buildFormGroup() {
+    const form: LoginForm = {
+      email: [null, [Validators.email, Validators.required]],
+      password: [null, [Validators.required]]
+    }
+
+    return this.formBuilder.group(form)
   }
 }

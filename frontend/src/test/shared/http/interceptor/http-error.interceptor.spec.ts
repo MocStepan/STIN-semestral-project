@@ -1,5 +1,4 @@
 import {HttpErrorResponse, HttpHandler, HttpRequest} from "@angular/common/http";
-import {throwError} from "rxjs";
 import {HttpErrorInterceptor} from "../../../../app/shared/http/interceptor/http-error.interceptor";
 import {AuthService} from "../../../../app/auth/service/auth.service";
 import {
@@ -26,8 +25,8 @@ describe('HttpErrorInterceptor', () => {
       imports: [HttpClientTestingModule],
       providers: [
         HttpErrorInterceptor,
-        { provide: AuthService, useValue: authServiceMock },
-        { provide: FrontendNotificationService, useValue: notificationServiceMock }
+        {provide: AuthService, useValue: authServiceMock},
+        {provide: FrontendNotificationService, useValue: notificationServiceMock}
       ]
     });
 

@@ -1,6 +1,5 @@
 package com.tul.backend.auth.base.service
 
-import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Qualifier
@@ -10,8 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Component
 import org.springframework.web.util.WebUtils
-
-private val log = KotlinLogging.logger {}
 
 @Component
 class TokenFilterService(

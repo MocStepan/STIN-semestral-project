@@ -39,25 +39,14 @@ import {RegistrationForm} from "../model/RegistrationForm";
   ]
 })
 export class RegisterComponent implements OnInit {
+  formGroup!: FormGroup
   private formBuilder = inject(FormBuilder)
   private authService = inject(AuthService)
   private notificationService = inject(FrontendNotificationService)
   private router = inject(Router)
-  formGroup!: FormGroup
 
   ngOnInit(): void {
     this.formGroup = this.buildFormGroup()
-  }
-
-  private buildFormGroup() {
-    const form: RegistrationForm = {
-      username: [null, [Validators.required]],
-      email: [null, [Validators.email, Validators.required]],
-      password: [null, [Validators.required]],
-      passwordConfirmation: [null, [Validators.required]]
-    }
-
-    return this.formBuilder.group(form)
   }
 
   onSubmit() {
@@ -78,5 +67,16 @@ export class RegisterComponent implements OnInit {
 
   openLoginForm() {
     this.router.navigate(['/login'])
+  }
+
+  private buildFormGroup() {
+    const form: RegistrationForm = {
+      username: [null, [Validators.required]],
+      email: [null, [Validators.email, Validators.required]],
+      password: [null, [Validators.required]],
+      passwordConfirmation: [null, [Validators.required]]
+    }
+
+    return this.formBuilder.group(form)
   }
 }
