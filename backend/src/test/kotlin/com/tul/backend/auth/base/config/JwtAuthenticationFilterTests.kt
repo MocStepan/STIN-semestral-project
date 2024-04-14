@@ -29,7 +29,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
         .roles(AuthUserRole.ADMIN.name)
         .build()
 
-      every { spec.tokenFilterService.validateRequest(request) } returns authUser
+      every { spec.tokenFilterService.validateRequest(request, response) } returns authUser
       every { spec.tokenFilterService.updateContext(authUser, request, response) } just runs
       every { filterChain.doFilter(request, response) } just runs
 
@@ -49,7 +49,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
         .roles(AuthUserRole.ADMIN.name)
         .build()
 
-      every { spec.tokenFilterService.validateRequest(request) } returns null
+      every { spec.tokenFilterService.validateRequest(request, response) } returns null
       every { filterChain.doFilter(request, response) } just runs
 
       spec.doFilterInternal(request, response, filterChain)

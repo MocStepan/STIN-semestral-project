@@ -4,21 +4,24 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseCookie
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.Date
 
 @Service
 class TokenService(
-  @Value("\${jwt.key}") private val key: String,
-  @Value("\${jwt.access-token-expiration}") private val expirationDate: Int
+  @Value("\${spring.jwt.secure}") private val secure: Boolean,
+  @Value("\${spring.jwt.sameSite}") private val sameSite: String,
+  @Value("\${spring.jwt.duration}") private val duration: Long,
+  @Value("\${spring.jwt.secret}") private val secret: String
 ) {
 
-  private val secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(key))
+  private val secretKey = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
 
   fun generateAccessToken(
     userDetails: UserDetails,
@@ -28,7 +31,7 @@ class TokenService(
       .claims()
       .subject(userDetails.username)
       .issuedAt(Date(System.currentTimeMillis()))
-      .expiration(Date(System.currentTimeMillis() + expirationDate))
+      .expiration(Date(System.currentTimeMillis() + duration))
       .add(additionalClaims)
       .and()
       .signWith(secretKey)
@@ -59,9 +62,24 @@ class TokenService(
     request: HttpServletRequest,
     response: HttpServletResponse
   ) {
-    val cookie = Cookie("access_token", jwtToken)
-    cookie.maxAge = expirationDate
-    cookie.path = "/"
-    response.addCookie(cookie)
+    val cookie = ResponseCookie.from("access_token", jwtToken)
+      .httpOnly(true)
+      .path("/")
+      .secure(secure)
+      .sameSite(sameSite)
+      .maxAge(duration)
+      .build()
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
+  }
+
+  fun clearCookies(response: HttpServletResponse) {
+    val cookie = ResponseCookie.from("access_token", "")
+      .httpOnly(true)
+      .path("/")
+      .secure(secure)
+      .sameSite(sameSite)
+      .maxAge(duration)
+      .build()
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
   }
 }

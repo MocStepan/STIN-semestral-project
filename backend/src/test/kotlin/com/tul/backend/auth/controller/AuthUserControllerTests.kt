@@ -26,12 +26,12 @@ class AuthUserControllerTests : FeatureSpec({
         "password"
       )
 
-      every { spec.authUserService.login(loginDTO, request, response) } returns "token"
+      every { spec.authUserService.login(loginDTO, request, response) } returns true
 
       val result = spec.authUserController.login(loginDTO, request, response)
 
       result.statusCode shouldBe HttpStatus.OK
-      result.body shouldBe "token"
+      result.body shouldBe true
     }
 
     scenario("login with invalid credentials") {
@@ -43,12 +43,12 @@ class AuthUserControllerTests : FeatureSpec({
         "password"
       )
 
-      every { spec.authUserService.login(loginDTO, request, response) } returns null
+      every { spec.authUserService.login(loginDTO, request, response) } returns false
 
       val result = spec.authUserController.login(loginDTO, request, response)
 
       result.statusCode shouldBe HttpStatus.NOT_FOUND
-      result.body shouldBe null
+      result.body shouldBe false
     }
   }
 
@@ -58,6 +58,7 @@ class AuthUserControllerTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("email"),
+        "password",
         "password"
       )
       val authUserDTO = AuthUserDTO.from(createAuthUser())
@@ -75,6 +76,7 @@ class AuthUserControllerTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("email"),
+        "password",
         "password"
       )
 

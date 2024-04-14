@@ -61,7 +61,12 @@ class TokenServiceTests : FeatureSpec({
     }
 
     scenario("token is expired") {
-      val tokenService = TokenService("7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250", 0)
+      val tokenService = TokenService(
+        true,
+        "Lax",
+        -6000,
+        "7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250"
+      )
 
       val expiredUser = User.builder()
         .username("test@test.cz")
@@ -112,7 +117,12 @@ class TokenServiceTests : FeatureSpec({
     }
 
     scenario("invalid token - expired") {
-      val tokenService = TokenService("7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250", -6000)
+      val tokenService = TokenService(
+        true,
+        "Lax",
+        -6000,
+        "7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250"
+      )
       val expiredUser = User.builder()
         .username("test@test.cz")
         .password("password")
@@ -133,7 +143,7 @@ class TokenServiceTests : FeatureSpec({
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
 
-      every { response.addCookie(any()) } just runs
+      every { response.addHeader(any(), any()) } just runs
 
       spec.tokenService.updateContext("token", request, response)
     }
@@ -141,7 +151,13 @@ class TokenServiceTests : FeatureSpec({
 })
 
 private class TokenServiceSpecWrapper {
-  val tokenService = TokenService("7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250", 6000)
+  val tokenService =
+    TokenService(
+      true,
+      "Lax",
+      6000,
+      "7A25432A462D4A614E645267556B58703272357538782F413F3328472B4B6250"
+    )
 }
 
 private fun getSpec() = TokenServiceSpecWrapper()

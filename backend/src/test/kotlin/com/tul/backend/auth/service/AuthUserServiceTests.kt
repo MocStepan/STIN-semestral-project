@@ -27,11 +27,11 @@ class AuthUserServiceTests : FeatureSpec({
         "password"
       )
 
-      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns "token"
+      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns true
 
       val result = spec.authUserService.login(loginDTO, request, response)
 
-      result shouldBe "token"
+      result shouldBe true
     }
 
     scenario("login with invalid email") {
@@ -45,7 +45,7 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.login(loginDTO, request, response)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
     }
 
@@ -60,11 +60,11 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.login(loginDTO, request, response)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
     }
 
-    scenario("authenticate returns null") {
+    scenario("authenticate returns false") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
       val request = mockk<HttpServletRequest>()
@@ -73,11 +73,11 @@ class AuthUserServiceTests : FeatureSpec({
         "password"
       )
 
-      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns null
+      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns false
 
       val result = spec.authUserService.login(loginDTO, request, response)
 
-      result shouldBe null
+      result shouldBe false
     }
   }
 
@@ -87,6 +87,7 @@ class AuthUserServiceTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("test@test.cz"),
+        "password",
         "password"
       )
       val authUser = createAuthUser()
@@ -110,6 +111,7 @@ class AuthUserServiceTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("test@"),
+        "password",
         "password"
       )
 
@@ -126,6 +128,7 @@ class AuthUserServiceTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "",
         EmailAddress("test@test.cz"),
+        "password",
         "password"
       )
 
@@ -142,6 +145,7 @@ class AuthUserServiceTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("test@test.cz"),
+        "",
         ""
       )
 
@@ -158,6 +162,7 @@ class AuthUserServiceTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         "username",
         EmailAddress("test@test.cz"),
+        "password",
         "password"
       )
 
