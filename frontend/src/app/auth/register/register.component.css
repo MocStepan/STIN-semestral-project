@@ -1,0 +1,36 @@
+.registration-container {
+  margin-top: 50px;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+  display: flex;
+}
+
+form {
+  width: 100%;
+}
+
+.registration-content {
+  width: 400px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 1em;
+}
+
+.registration-toolbar {
+  justify-content: center;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-raised-button {
+  width: 100%;
+  height: 60px;
+  margin-top: 15px;
+}
+
+.mat-mdc-card {
+  background: #2c3338;
+}

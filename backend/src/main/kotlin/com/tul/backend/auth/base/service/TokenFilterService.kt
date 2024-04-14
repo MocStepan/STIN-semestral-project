@@ -7,8 +7,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
+import org.springframework.web.util.WebUtils
 
 @Component
 class TokenFilterService(
@@ -16,16 +16,21 @@ class TokenFilterService(
   private val tokenService: TokenService
 ) {
 
-  fun validateRequest(request: HttpServletRequest): UserDetails? {
-    val (email, token) = extractEmailAndToken(request)
+  fun validateRequest(request: HttpServletRequest, response: HttpServletResponse): UserDetails? {
+    try {
+      val (email, token) = extractEmailAndToken(request)
 
-    if (email != null && SecurityContextHolder.getContext().authentication == null) {
-      val userDetails = userDetailsService.loadUserByUsername(email)
-      if (tokenService.isValidToken(token, userDetails)) {
-        return userDetails
+      if (email != null && SecurityContextHolder.getContext().authentication == null) {
+        val userDetails = userDetailsService.loadUserByUsername(email)
+        if (tokenService.isValidToken(token, userDetails)) {
+          return userDetails
+        }
       }
+      return null
+    } catch (e: Exception) {
+      tokenService.clearCookies(response)
+      return null
     }
-    return null
   }
 
   fun updateContext(
@@ -38,18 +43,17 @@ class TokenFilterService(
       null,
       userDetails.authorities
     )
-    authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
 
     SecurityContextHolder.getContext().authentication = authToken
   }
 
   private fun extractEmailAndToken(request: HttpServletRequest): Pair<String?, String?> {
-    val authHeader = request.getHeader("Cookie")
+    val authHeader = WebUtils.getCookie(request, "access_token")
     var token: String? = null
     var email: String? = null
 
-    if (authHeader != null && authHeader.startsWith("access_token=")) {
-      token = authHeader.substring(13)
+    if (authHeader != null && authHeader.name == "access_token") {
+      token = authHeader.value
       email = tokenService.extractEmail(token)
     }
     return Pair(email, token)

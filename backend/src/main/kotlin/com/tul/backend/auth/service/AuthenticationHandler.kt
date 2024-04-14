@@ -26,7 +26,7 @@ class AuthenticationHandler(
     loginDTO: LoginDTO,
     request: HttpServletRequest,
     response: HttpServletResponse
-  ): String? {
+  ): Boolean {
     authManager.authenticate(
       UsernamePasswordAuthenticationToken(
         loginDTO.email,
@@ -38,9 +38,9 @@ class AuthenticationHandler(
     return if (customPasswordEncoder.matches(loginDTO.password, userDetails.password)) {
       val token = tokenService.generateAccessToken(userDetails)
       tokenService.updateContext(token, request, response)
-      token
+      true
     } else {
-      null
+      false
     }
   }
 

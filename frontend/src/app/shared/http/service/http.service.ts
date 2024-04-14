@@ -4,8 +4,7 @@ import {inject, Injectable} from "@angular/core";
 @Injectable({providedIn: 'root'})
 export class HttpService {
 
-  constructor(private httpClient: HttpClient) {
-  }
+  private httpClient = inject(HttpClient)
 
   get<T>(url: string, options = {}) {
     return this.httpClient.get<T>(url, options)
@@ -13,6 +12,10 @@ export class HttpService {
 
   post<T>(url: string, data: unknown) {
     return this.httpClient.post<T>(url, data)
+  }
+
+  postWithOptions<T>(url: string, data: unknown, options = {}) {
+    return this.httpClient.post<T>(url, data, options)
   }
 
   put<T>(url: string, data: unknown, options = {}) {

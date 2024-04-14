@@ -5,8 +5,11 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import jakarta.servlet.http.HttpSession
@@ -20,6 +23,7 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("validate request") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
       val userDetails = User.builder()
         .username("email")
         .password("password")
@@ -27,13 +31,13 @@ class TokenFilterServiceTests : FeatureSpec({
         .build()
       val securityContext = mockk<SecurityContext>()
 
-      every { request.getHeader("Cookie") } returns "access_token=token"
+      every { request.cookies } returns arrayOf(Cookie("access_token", "token"))
       every { spec.tokenService.extractEmail("token") } returns "email"
       every { securityContext.authentication } returns null
       every { spec.userDetailsService.loadUserByUsername("email") } returns userDetails
       every { spec.tokenService.isValidToken("token", userDetails) } returns true
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe userDetails
     }
@@ -41,10 +45,11 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("request without cookie header") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
 
-      every { request.getHeader("Cookie") } returns null
+      every { spec.tokenService.clearCookies(response) } just runs
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe null
     }
@@ -52,11 +57,12 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("validate request with null email") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
 
-      every { request.getHeader("Cookie") } returns "access_token=token"
+      every { spec.tokenService.clearCookies(response) } just runs
       every { spec.tokenService.extractEmail("token") } returns null
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe null
       verify(exactly = 0) { spec.userDetailsService.loadUserByUsername(any()) }
@@ -65,10 +71,11 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("validate request with wrong token") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
 
-      every { request.getHeader("Cookie") } returns "dasd=token"
+      every { spec.tokenService.clearCookies(response) } just runs
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe null
       verify(exactly = 0) { spec.tokenService.extractEmail(any()) }
@@ -78,13 +85,14 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("validate request with null authentication") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
       val securityContext = mockk<SecurityContext>()
 
-      every { request.getHeader("Cookie") } returns null
+      every { spec.tokenService.clearCookies(response) } just runs
       every { spec.tokenService.extractEmail("token") } returns "email"
       every { securityContext.authentication } returns mockk()
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe null
       verify(exactly = 0) { spec.userDetailsService.loadUserByUsername(any()) }
@@ -93,13 +101,14 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("loadUserByUsername throws exception") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
 
       every { request.getHeader("Cookie") } returns "access_token=token"
       every { spec.tokenService.extractEmail("token") } returns "email"
       every { spec.userDetailsService.loadUserByUsername("email") } throws Exception()
 
       shouldThrow<Exception> {
-        spec.tokenFilterService.validateRequest(request)
+        spec.tokenFilterService.validateRequest(request, response)
       }
       verify(exactly = 0) { spec.tokenService.isValidToken(any(), any()) }
     }
@@ -107,18 +116,19 @@ class TokenFilterServiceTests : FeatureSpec({
     scenario("invalid token") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
+      val response = mockk<HttpServletResponse>()
       val userDetails = User.builder()
         .username("email")
         .password("password")
         .roles(AuthUserRole.ADMIN.name)
         .build()
 
-      every { request.getHeader("Cookie") } returns "access_token=token"
+      every { spec.tokenService.clearCookies(response) } just runs
       every { spec.tokenService.extractEmail("token") } returns "email"
       every { spec.userDetailsService.loadUserByUsername("email") } returns userDetails
       every { spec.tokenService.isValidToken("token", userDetails) } returns false
 
-      val result = spec.tokenFilterService.validateRequest(request)
+      val result = spec.tokenFilterService.validateRequest(request, response)
 
       result shouldBe null
     }

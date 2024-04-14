@@ -18,10 +18,10 @@ class AuthUserService(
   private val authenticationHandler: AuthenticationHandler,
   private val authUserRepository: AuthUserRepository
 ) {
-  fun login(loginDTO: LoginDTO, request: HttpServletRequest, response: HttpServletResponse): String? {
+  fun login(loginDTO: LoginDTO, request: HttpServletRequest, response: HttpServletResponse): Boolean {
     if (!loginDTO.isValid()) {
       log.warn { "LoginDTO: $loginDTO is invalid" }
-      return null
+      return false
     }
 
     return authenticationHandler.authenticate(loginDTO, request, response)

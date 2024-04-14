@@ -25,9 +25,9 @@ class AuthUserController(
     @RequestBody loginDTO: LoginDTO,
     request: HttpServletRequest,
     response: HttpServletResponse
-  ): ResponseEntity<String?> {
+  ): ResponseEntity<Boolean> {
     val responseDTO = authUserService.login(loginDTO, request, response)
-    val status = if (responseDTO != null) HttpStatus.OK else HttpStatus.NOT_FOUND
+    val status = if (responseDTO) HttpStatus.OK else HttpStatus.NOT_FOUND
     return ResponseEntity(responseDTO, status)
   }
 

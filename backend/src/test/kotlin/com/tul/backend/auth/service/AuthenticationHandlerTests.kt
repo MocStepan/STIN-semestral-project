@@ -50,7 +50,7 @@ class AuthenticationHandlerTests : FeatureSpec({
 
       val result = spec.authenticationHandler.authenticate(loginDTO, request, response)
 
-      result shouldBe "token"
+      result shouldBe true
     }
 
     scenario("authenticate with invalid password") {
@@ -79,7 +79,7 @@ class AuthenticationHandlerTests : FeatureSpec({
 
       val result = spec.authenticationHandler.authenticate(loginDTO, request, response)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.tokenService.generateAccessToken(userDetails) }
       verify(exactly = 0) { spec.tokenService.updateContext("token", request, response) }
     }
@@ -92,6 +92,7 @@ class AuthenticationHandlerTests : FeatureSpec({
       val registerDTO = RegisterDTO(
         auth.username,
         auth.email,
+        auth.password,
         auth.password
       )
 

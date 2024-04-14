@@ -17,7 +17,7 @@ class JwtAuthenticationFilter(
     response: HttpServletResponse,
     filterChain: FilterChain
   ) {
-    val userDetails = tokenFilterService.validateRequest(request)
+    val userDetails = tokenFilterService.validateRequest(request, response)
     if (userDetails != null) {
       tokenFilterService.updateContext(userDetails, request, response)
     }

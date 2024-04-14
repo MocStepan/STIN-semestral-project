@@ -19,6 +19,8 @@ import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
+import org.springframework.web.cors.CorsConfiguration
+import org.springframework.web.cors.CorsConfigurationSource
 
 
 @Configuration
@@ -33,7 +35,7 @@ class SecurityConfiguration(
   private val userUnsecuredEndpoints =
     arrayOf(
       "/api/auth/login",
-      "/api/auth/register",
+      "/api/auth/register"
     )
 
   private val adminUnsecuredEndpoints =
@@ -48,7 +50,9 @@ class SecurityConfiguration(
   ): DefaultSecurityFilterChain =
     http
       .csrf { it.disable() }
-      .cors { it.disable() }
+      .cors {
+        it.configurationSource(corsConfigurationSource())
+      }
       .authorizeHttpRequests {
         it
           .requestMatchers(*userUnsecuredEndpoints).permitAll()
@@ -78,4 +82,16 @@ class SecurityConfiguration(
       response.status = HttpServletResponse.SC_UNAUTHORIZED
       objectMapper.writeValue(response.writer, ErrorDTO("${authException.message}"))
     }
+
+  private fun corsConfigurationSource(): CorsConfigurationSource {
+    return CorsConfigurationSource {
+      CorsConfiguration().apply {
+        allowedMethods = listOf("*")
+        allowedHeaders = listOf("*")
+        exposedHeaders = listOf("Content-Disposition")
+        allowedOriginPatterns = listOf("*")
+        allowCredentials = true
+      }
+    }
+  }
 }
