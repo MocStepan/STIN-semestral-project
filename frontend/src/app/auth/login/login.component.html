@@ -1,0 +1,26 @@
+<form #formDirective="ngForm" (ngSubmit)="onSubmit()"
+      *ngIf="formGroup"
+      [formGroup]="formGroup">
+  <div class="login-container">
+    <div class="login-content">
+      <mat-toolbar class="login-toolbar" color="primary">Login</mat-toolbar>
+      <mat-card>
+
+        <mat-form-field>
+          <mat-icon matPrefix>person_outline</mat-icon>
+          <input [formControlName]="'email'" matInput placeholder="Email" type="text">
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-icon matPrefix>lock_outline</mat-icon>
+          <input [formControlName]="'password'" matInput placeholder="Password" type="password">
+        </mat-form-field>
+
+        <button color="primary" mat-raised-button type="submit" >Přihlásit se</button>
+        <br>
+        <button color="basic" mat-raised-button type="button" (click)="openRegistrationForm()">Registrovat se</button>
+        <br>
+      </mat-card>
+    </div>
+  </div>
+</form>
