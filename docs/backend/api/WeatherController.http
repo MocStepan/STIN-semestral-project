@@ -1,8 +1,0 @@
-# @name get actual weather
-POST {{BACKEND}}/api/auth/weather/actual-weather
-Content-Type: application/json
-
-{
-  "email": "{{adminEmail}}",
-  "password": "{{adminPassword}}"
-}
