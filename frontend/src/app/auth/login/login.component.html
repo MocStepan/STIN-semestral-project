@@ -1,13 +1,13 @@
 <form #formDirective="ngForm" (ngSubmit)="onSubmit()"
       *ngIf="formGroup"
       [formGroup]="formGroup">
-  <div class="login-container">
-    <div class="login-content">
-      <mat-toolbar class="login-toolbar" color="primary">Login</mat-toolbar>
+  <div class="auth-container">
+    <div class="auth-content">
+      <mat-toolbar class="auth-toolbar" color="primary">Login</mat-toolbar>
       <mat-card>
 
         <mat-form-field>
-          <mat-icon matPrefix>person_outline</mat-icon>
+          <mat-icon matPrefix>alternate_email</mat-icon>
           <input [formControlName]="'email'" matInput placeholder="Email" type="text">
         </mat-form-field>
 

@@ -1,4 +1,4 @@
-package com.tul.backend.configuration.jackson
+package com.tul.backend.shared.jackson
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext

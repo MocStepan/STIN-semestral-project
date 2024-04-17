@@ -1,6 +1,4 @@
-.login-container {
-  margin-top: 50px;
-  height: 100%;
+.container {
   width: 100%;
   align-items: center;
   display: flex;
@@ -10,15 +8,12 @@ form {
   width: 100%;
 }
 
-.login-content {
+.content {
   width: 400px;
   display: block;
-  margin: 0 auto;
+  margin: 1em auto;
   border-radius: 1em;
-}
-
-.login-toolbar {
-  justify-content: center;
+  flex-direction: row;
 }
 
 .mat-form-field {
@@ -33,4 +28,15 @@ form {
 
 .mat-mdc-card {
   background: #2c3338;
+}
+
+.data-content {
+  display: flex;
+  margin: 1em auto;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }

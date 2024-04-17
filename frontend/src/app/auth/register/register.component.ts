@@ -3,7 +3,7 @@ import {AuthService} from "../service/auth.service";
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
 import {MatCard} from "@angular/material/card";
-import {MatFormField} from "@angular/material/form-field";
+import {MatFormField, MatPrefix} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {MatToolbar} from "@angular/material/toolbar";
@@ -24,10 +24,11 @@ import {RegistrationForm} from "../model/RegistrationForm";
     MatInput,
     MatToolbar,
     NgIf,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatPrefix
   ],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css',
+  styleUrl: '../style/auth.component.css',
   providers: [
     AuthService,
     FormBuilder,

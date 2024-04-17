@@ -1,16 +1,17 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
 import {AuthService} from "../service/auth.service";
-import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginForm} from "../model/LoginForm";
-import {MatFormField} from "@angular/material/form-field";
+import {MatFormField, MatFormFieldModule, MatPrefix} from "@angular/material/form-field";
 import {MatCard} from "@angular/material/card";
 import {MatToolbar} from "@angular/material/toolbar";
-import {MatIcon} from "@angular/material/icon";
-import {MatInput} from "@angular/material/input";
-import {MatButton} from "@angular/material/button";
+import {MatIcon, MatIconModule} from "@angular/material/icon";
+import {MatInput, MatInputModule} from "@angular/material/input";
+import {MatButton, MatButtonModule} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 import {Router} from "@angular/router";
+import {AppModule} from "../../app.module";
 
 @Component({
   selector: 'app-login',
@@ -21,13 +22,14 @@ import {Router} from "@angular/router";
     MatCard,
     MatToolbar,
     MatIcon,
-    ReactiveFormsModule,
     MatInput,
     MatButton,
-    NgIf
+    NgIf,
+    ReactiveFormsModule,
+    MatPrefix
   ],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+  styleUrl: '../style/auth.component.css',
   providers: [
     AuthService,
     {
