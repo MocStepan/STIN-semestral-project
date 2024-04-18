@@ -1,0 +1,23 @@
+<mat-toolbar>
+  <a [routerLink]="'/'">
+    <li [class.selected]="isSelected('/')" class="page-body-text">
+      <mat-icon>home</mat-icon>
+    </li>
+  </a>
+  <a *ngIf="isUserSignedIn()">
+    <li class="page-body-text">
+      <span>Oblibéné</span>
+    </li>
+  </a>
+  <span class="fill-space"></span>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/login'">
+    <li [class.selected]="isSelected('/login')" class="page-body-text">
+      <span>Přihlásit se</span>
+    </li>
+  </a>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/registration'">
+    <li [class.selected]="isSelected('/registration')" class="page-body-text">
+      <span>Registrovat se</span>
+    </li>
+  </a>
+</mat-toolbar>
