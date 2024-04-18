@@ -35,8 +35,8 @@ import {filter, Subscription} from "rxjs";
   styleUrl: './navigation.component.css'
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  protected currentUrl: string = ''
-  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  currentUrl: string = ''
+  isUserSignedIn: WritableSignal<boolean> = signal(false)
   private readonly onChangeSubs: Subscription[] = []
 
   private router = inject(Router)
