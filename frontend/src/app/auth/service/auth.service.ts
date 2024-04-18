@@ -5,12 +5,14 @@ import {Observable, tap} from "rxjs";
 import {HttpHeaders, HttpResponse} from "@angular/common/http";
 import {LoginForm} from "../model/LoginForm";
 import {RegistrationForm} from "../model/RegistrationForm";
+import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private httpService = inject(HttpService)
+  private notificationService = inject(FrontendNotificationService)
   private rootHttpUrl = BASE_API_URL + 'auth/'
 
   login(login: LoginForm): Observable<HttpResponse<void>> {
@@ -24,7 +26,8 @@ export class AuthService {
 
   logout() {
     this.httpService.get(this.rootHttpUrl + 'logout').subscribe(() => {
-      sessionStorage.removeItem('auth')
+      this.notificationService.successNotification('Uživatel byl odhlášen')
+      this.setLogout();
     })
   }
 
@@ -34,6 +37,10 @@ export class AuthService {
 
   register(value: RegistrationForm): Observable<Boolean> {
     return this.httpService.post(this.rootHttpUrl + 'register', value)
+  }
+
+  isUserSignedIn() {
+    return sessionStorage.getItem('auth') === 'true'
   }
 
   private setLoggedIn() {

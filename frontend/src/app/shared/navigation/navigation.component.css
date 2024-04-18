@@ -1,0 +1,24 @@
+.page-body-text {
+  font-size: 1rem;
+  padding: 0.5rem 0.5rem 0.5rem 1rem;
+  color: black;
+}
+
+.page-body-text.selected {
+  font-weight: bolder;
+  color: #3f51b5;
+}
+
+li {
+  list-style-type: none;
+  cursor: pointer;
+}
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+.fill-space {
+  flex: 1;
+}

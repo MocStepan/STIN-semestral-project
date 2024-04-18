@@ -2,7 +2,7 @@ import {NgModule} from "@angular/core";
 import {AppComponent} from "./app.component";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {AppRoutingModule} from "./app-routing.module";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {FormsModule} from "@angular/forms";
 import {BrowserModule} from "@angular/platform-browser";
 import {RouterModule} from "@angular/router";
 import {HttpHeaderInterceptor} from "./shared/http/interceptor/http-header.interceptor";
@@ -11,6 +11,7 @@ import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
+import {NavigationComponent} from "./shared/navigation/navigation.component";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {MatIconModule} from "@angular/material/icon";
     MatInputModule,
     FormsModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    NavigationComponent
   ],
   providers: [
     {
