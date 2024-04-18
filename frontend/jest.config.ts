@@ -8,7 +8,7 @@ const jestConfig: Config = {
   reporters: [
     'default',
   ],
-  collectCoverageFrom: ['src/app/*.ts', '!**/node_modules/**'],
+  collectCoverageFrom: ['src/app/**/*.ts', '!**/node_modules/**'],
   coverageDirectory: 'coverage',
   coverageReporters: ['cobertura', 'text', 'text-summary', 'html'],
   cacheDirectory: '.jestcache'
