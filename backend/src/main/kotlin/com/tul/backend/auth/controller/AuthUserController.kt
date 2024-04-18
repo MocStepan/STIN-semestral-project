@@ -1,6 +1,5 @@
 package com.tul.backend.auth.controller
 
-import com.tul.backend.auth.dto.AuthUserDTO
 import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.auth.service.AuthUserService
@@ -34,9 +33,9 @@ class AuthUserController(
   @PostMapping("/auth/register")
   fun register(
     @RequestBody registerDTO: RegisterDTO,
-  ): ResponseEntity<AuthUserDTO?> {
+  ): ResponseEntity<Boolean> {
     val response = authUserService.register(registerDTO)
-    val status = if (response != null) HttpStatus.OK else HttpStatus.BAD_REQUEST
+    val status = if (response) HttpStatus.OK else HttpStatus.BAD_REQUEST
     return ResponseEntity(response, status)
   }
 }

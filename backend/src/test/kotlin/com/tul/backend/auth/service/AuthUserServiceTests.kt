@@ -5,7 +5,6 @@ import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.auth.entity.AuthUser
 import com.tul.backend.auth.repository.AuthUserRepository
-import com.tul.backend.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -90,7 +89,7 @@ class AuthUserServiceTests : FeatureSpec({
         "password",
         "password"
       )
-      val authUser = createAuthUser()
+      val authUser = AuthUser.from(registerDTO)
 
       val authUserSlot = slot<AuthUser>()
 
@@ -98,12 +97,14 @@ class AuthUserServiceTests : FeatureSpec({
       every { spec.authenticationHandler.hashRegistrationPassword(registerDTO) } returns authUser
       every { spec.authUserRepository.save(capture(authUserSlot)) } returnsArgument 0
 
-      val result = spec.authUserService.register(registerDTO)!!
+      val result = spec.authUserService.register(registerDTO)
 
       val captured = authUserSlot.captured
-      result.id shouldBe captured.id
-      result.username shouldBe captured.username
-      result.email shouldBe captured.email
+      result shouldBe true
+      captured.username shouldBe registerDTO.username
+      captured.email shouldBe registerDTO.email
+      captured.password shouldBe authUser.password
+      registerDTO.passwordConfirmation shouldBe "password"
     }
 
     scenario("register with invalid email") {
@@ -117,7 +118,7 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.register(registerDTO)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
@@ -134,7 +135,7 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.register(registerDTO)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
@@ -151,7 +152,7 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.register(registerDTO)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
@@ -171,8 +172,25 @@ class AuthUserServiceTests : FeatureSpec({
 
       val result = spec.authUserService.register(registerDTO)
 
-      result shouldBe null
+      result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authUserRepository.save(any()) }
+    }
+
+    scenario("register with not same passwords") {
+      val spec = getSpec()
+      val registerDTO = RegisterDTO(
+        "username",
+        EmailAddress("test@test.cz"),
+        "password",
+        "password123"
+      )
+
+      val result = spec.authUserService.register(registerDTO)
+
+      result shouldBe false
+      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
   }

@@ -1,4 +1,4 @@
-.registration-container {
+.auth-container {
   margin-top: 50px;
   height: 100%;
   width: 100%;
@@ -10,14 +10,14 @@ form {
   width: 100%;
 }
 
-.registration-content {
+.auth-content {
   width: 400px;
   display: block;
   margin: 0 auto;
   border-radius: 1em;
 }
 
-.registration-toolbar {
+.auth-toolbar {
   justify-content: center;
 }
 
