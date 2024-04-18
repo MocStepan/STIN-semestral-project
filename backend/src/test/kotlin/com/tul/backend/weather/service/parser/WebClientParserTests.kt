@@ -15,12 +15,14 @@ class WebClientParserTests : FeatureSpec({
     scenario("should return LocationDTO") {
       val spec = getSpec()
       val json = """
-        [
-          {
-            "lat": 51.506321,
-            "lon": -0.12714
-          }
-        ]
+        {
+          "results": [
+            {
+              "latitude": 51.506321,
+              "longitude": -0.12714
+            }
+          ]
+        }
       """.trimIndent()
       val expectedResult = LocationDTO(51.506321, -0.12714)
 
@@ -85,13 +87,13 @@ class WebClientParserTests : FeatureSpec({
     scenario("should return ForecastWeatherDTO") {
       val spec = getSpec()
       val json = """
-        |{
-        |  "daily": {
-        |    "time": ["2021-08-01T00:00:00.000Z"],
-        |    "temperature_2m_max": [15.0],
-        |    "temperature_2m_min": [10.0],"wind_speed_10m_max": [20.0]
-        |  }
-        |}
+        {
+          "daily": {
+            "time": ["2021-08-01T00:00:00.000Z"],
+            "temperature_2m_max": [15.0],
+            "temperature_2m_min": [10.0],"wind_speed_10m_max": [20.0]
+          }
+        }
       """.trimMargin()
       val expectedResult = ForecastWeatherDTO(
         time = listOf(LocalDate.parse("2021-08-01")),

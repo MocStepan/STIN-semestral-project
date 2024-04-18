@@ -4,10 +4,10 @@
       <mat-card>
         <mat-form-field>
           <mat-icon matPrefix>cloud</mat-icon>
-          <input matInput [formControl]="cityForm" type="text" placeholder="Vyberte počasí">
+          <input [formControl]="cityForm" matInput placeholder="Vyberte počasí" type="text">
         </mat-form-field>
 
-        <button mat-raised-button color="primary" (click)="getCurrentWeather()">Hledat</button>
+        <button (click)="getCurrentWeather()" color="primary" mat-raised-button>Hledat</button>
       </mat-card>
     </div>
   </div>
@@ -24,7 +24,7 @@
               <p>Čas: {{ currentSignal().time }}</p>
               <p>Teplota: {{ currentSignal().temperature }}°C</p>
               <p>Oblačnost: {{ currentSignal().cloudCover }}</p>
-              <p>Rychlost větru: {{ currentSignal().temperature}}</p>
+              <p>Rychlost větru: {{ currentSignal().temperature }}</p>
             </div>
           </mat-card-content>
         </mat-card>

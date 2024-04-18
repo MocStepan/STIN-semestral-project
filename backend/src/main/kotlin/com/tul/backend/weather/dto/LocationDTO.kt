@@ -10,8 +10,8 @@ data class LocationDTO(
   companion object {
     fun from(locationOutcomeJson: LocationOutcomeJson): LocationDTO {
       return LocationDTO(
-        latitude = locationOutcomeJson.lat,
-        longitude = locationOutcomeJson.lon
+        latitude = locationOutcomeJson.latitude,
+        longitude = locationOutcomeJson.longitude
       )
     }
   }

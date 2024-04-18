@@ -20,16 +20,18 @@ class GeoDecoderClientService(
       configurer
         .defaultCodecs()
         .maxInMemorySize(4096 * 1024) // Listing detail html resource size is 2,6MB
-    }.baseUrl("https://nominatim.openstreetmap.org/search").build()
+    }.baseUrl("https://geocoding-api.open-meteo.com/v1/search").build()
 
+  // https://geocoding-api.open-meteo.com/v1/search?name=%C4%8Cesk%C3%A9+Bud%C4%9Bjovice&count=1&language=en&format=json
   suspend fun getLocation(location: String): WebClientOutcome {
     return try {
       val response = webClient.get()
         .uri { uriBuilder ->
           uriBuilder
-            .queryParam("q", location)
+            .queryParam("name", location)
+            .queryParam("count", "1")
+            .queryParam("language", "en")
             .queryParam("format", "json")
-            .queryParam("limit", 1)
             .build()
         }
         .retrieve()

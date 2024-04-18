@@ -1,6 +1,6 @@
 export const environment = {
   baseUrl: '',
-  production: true,
+  production: false,
   version: '0.0.1',
   sentryDsn: '',  // do not use Sentry
 };

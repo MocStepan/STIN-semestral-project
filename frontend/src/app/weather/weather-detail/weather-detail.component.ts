@@ -13,7 +13,7 @@ import {ForecastWeatherDetail} from "../model/ForecastWeatherDetal";
 import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 
 @Component({
-  selector: 'app-weather-list',
+  selector: 'app-weather-detail',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -30,15 +30,15 @@ import {FrontendNotificationService} from "../../shared/frontend-notification/se
     MatCardTitle
   ],
   providers: [WeatherService],
-  templateUrl: './weather-list.component.html',
-  styleUrl: './weather-list.component.css'
+  templateUrl: './weather-detail.component.html',
+  styleUrl: './weather-detail.component.css'
 })
-export class WeatherListComponent implements OnInit {
+export class WeatherDetailComponent implements OnInit {
+  public cityForm = new FormControl();
+  public currentSignal: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
+  public forecastSignal: WritableSignal<ForecastWeatherDetail> = signal(ForecastWeatherDetail.createDefault())
   private weatherService = inject(WeatherService);
   private notificationService = inject(FrontendNotificationService);
-  protected cityForm = new FormControl();
-  protected currentSignal: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
-  protected forecastSignal: WritableSignal<ForecastWeatherDetail> = signal(ForecastWeatherDetail.createDefault())
 
   ngOnInit(): void {
   }
@@ -52,6 +52,9 @@ export class WeatherListComponent implements OnInit {
         this.notificationService.errorNotification('Město nenalezeno')
       }
     })
+  }
+
+  getForecastWeather() {
     this.weatherService.getForecastWeather(this.cityForm.value).subscribe({
       next: (response) => {
         this.forecastSignal.set(response)

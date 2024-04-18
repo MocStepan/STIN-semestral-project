@@ -24,7 +24,10 @@ describe('AuthService', () => {
     const loginForm: LoginForm = {email: 'test@test.cz', password: 'password'};
     httpService.postWithOptions = jest.fn().mockReturnValue(of({}));
 
-    authService.login(loginForm);
+    authService.login(loginForm).subscribe(response => {
+      expect(response.status).toBe(200);
+      expect(sessionStorage.getItem('auth')).toBe('true');
+    });
 
     expect(httpService.postWithOptions).toHaveBeenCalled()
   });
@@ -49,5 +52,15 @@ describe('AuthService', () => {
     authService.register(registrationForm).subscribe();
 
     expect(httpService.post).toHaveBeenCalled();
+  });
+
+  it('should setLogout', () => {
+    const sessionSpy = jest.spyOn(sessionStorage, 'removeItem');
+
+    sessionStorage.setItem('auth', 'test');
+
+    authService.setLogout();
+
+    expect(sessionStorage.getItem('auth')).toBeNull();
   });
 });
