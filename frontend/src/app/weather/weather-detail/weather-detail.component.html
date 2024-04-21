@@ -4,10 +4,10 @@
       <mat-card>
         <mat-form-field>
           <mat-icon matPrefix>cloud</mat-icon>
-          <input [formControl]="cityForm" matInput placeholder="Vyberte počasí" type="text">
+          <input [formControl]="cityFormControl" matInput placeholder="Vyberte počasí" type="text">
         </mat-form-field>
 
-        <button (click)="getCurrentWeather()" color="primary" mat-raised-button>Hledat</button>
+        <button (click)="getWeather()" color="primary" mat-raised-button>Hledat</button>
       </mat-card>
     </div>
   </div>
@@ -31,11 +31,7 @@
         <mat-card class="col">
           <mat-card-title>Forecast Weather</mat-card-title>
           <mat-card-content>
-            <div *ngIf="currentSignal()">
-              <p>Čas: {{ currentSignal().time }}</p>
-              <p>Teplota: {{ currentSignal().temperature }}°C</p>
-              <p>Oblačnost: {{ currentSignal().cloudCover }}</p>
-            </div>
+            <app-weather-graph></app-weather-graph>
           </mat-card-content>
         </mat-card>
       </div>

@@ -40,7 +40,7 @@ import {RegistrationForm} from "../model/RegistrationForm";
   ]
 })
 export class RegisterComponent implements OnInit {
-  formGroup!: FormGroup
+  protected formGroup!: FormGroup
   private formBuilder = inject(FormBuilder)
   private authService = inject(AuthService)
   private notificationService = inject(FrontendNotificationService)
