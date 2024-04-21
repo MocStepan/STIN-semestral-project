@@ -50,7 +50,7 @@ describe('RegisterComponent', () => {
         password: "password",
         passwordConfirmation: "password"
       } as RegistrationForm
-      component.formGroup = formBuilder.group(validFormValue)
+      component['formGroup'] = formBuilder.group(validFormValue)
       fixture.detectChanges()
 
       authService.register = jest.fn().mockReturnValue(of({}));
@@ -68,7 +68,7 @@ describe('RegisterComponent', () => {
 
     it('should throw error', () => {
       const validFormValue = {email: "test@test.cz", password: "password"} as LoginForm
-      component.formGroup = formBuilder.group(validFormValue)
+      component['formGroup'] = formBuilder.group(validFormValue)
       fixture.detectChanges()
 
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');

@@ -44,7 +44,7 @@ describe('LoginComponent', () => {
   describe('login', () => {
     it('should login', () => {
       const validFormValue = {email: "test@test.cz", password: "password"} as LoginForm
-      component.formGroup = formBuilder.group(validFormValue)
+      component['formGroup'] = formBuilder.group(validFormValue)
       fixture.detectChanges()
 
       authService.login = jest.fn().mockReturnValue(of({}));
@@ -62,7 +62,7 @@ describe('LoginComponent', () => {
 
     it('invalid password', () => {
       const validFormValue = {email: "test@test.cz", password: "password"} as LoginForm
-      component.formGroup = formBuilder.group(validFormValue)
+      component['formGroup'] = formBuilder.group(validFormValue)
       fixture.detectChanges()
 
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');

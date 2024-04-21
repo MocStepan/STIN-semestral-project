@@ -35,9 +35,10 @@ import {filter, Subscription} from "rxjs";
   styleUrl: './navigation.component.css'
 })
 export class NavigationComponent implements OnInit, OnDestroy {
-  currentUrl: string = ''
-  isUserSignedIn: WritableSignal<boolean> = signal(false)
-  private readonly onChangeSubs: Subscription[] = []
+  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  private readonly subscriptions: Subscription[] = []
+  private currentUrl: string = ''
+
 
   private router = inject(Router)
   private authService = inject(AuthService)
@@ -53,11 +54,11 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.currentUrl = (event as NavigationEnd).url
       this.changeDetectorRef.detectChanges()
     });
-    this.onChangeSubs.push(routerSubscription)
+    this.subscriptions.push(routerSubscription)
   }
 
   ngOnDestroy(): void {
-    this.onChangeSubs.forEach((subscription) => subscription.unsubscribe())
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 
   isSelected(navigationUrl: string) {

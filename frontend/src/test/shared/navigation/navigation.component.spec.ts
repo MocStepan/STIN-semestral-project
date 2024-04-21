@@ -1,11 +1,11 @@
 import {NavigationComponent} from "../../../app/shared/navigation/navigation.component";
 import {ComponentFixture, TestBed} from "@angular/core/testing";
 import {NavigationEnd, Router} from "@angular/router";
-import {RouterTestingModule} from "@angular/router/testing";
 import {HttpService} from "../../../app/shared/http/service/http.service";
 import {AuthService} from "../../../app/auth/service/auth.service";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {BehaviorSubject, of} from "rxjs";
+import {BehaviorSubject} from "rxjs";
+import {RouterTestingModule} from "@angular/router/testing";
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
@@ -33,11 +33,11 @@ describe('NavigationComponent', () => {
   });
 
   it('should set currentUrl on initialization', () => {
-    expect(component.currentUrl).toBe('/');
+    expect(component['currentUrl']).toBe('/');
   });
 
   it('should set isUserSignedIn on initialization', () => {
-    expect(component.isUserSignedIn()).toBeFalsy();
+    expect(component['isUserSignedIn']()).toBeFalsy();
   });
 
   it('should update currentUrl on router events', () => {
@@ -48,16 +48,16 @@ describe('NavigationComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.currentUrl).toBe('/new-url');
+    expect(component['currentUrl']).toBe('/new-url');
   });
 
   it('should return true when currentUrl matches navigationUrl', () => {
-    component.currentUrl = '/some-url';
+    component['currentUrl'] = '/some-url';
     expect(component.isSelected('/some-url')).toBeTruthy();
   });
 
   it('should return false when currentUrl does not match navigationUrl', () => {
-    component.currentUrl = '/some-url';
+    component['currentUrl'] = '/some-url';
     expect(component.isSelected('/other-url')).toBeFalsy();
   });
 });
