@@ -1,7 +1,12 @@
 package com.tul.backend.auth.base.valueobject
 
-enum class AuthUserRole {
-  FREE,
+import org.springframework.security.core.GrantedAuthority
+
+enum class AuthUserRole : GrantedAuthority {
   USER,
-  ADMIN
+  ADMIN;
+
+  override fun getAuthority(): String {
+    return name
+  }
 }

@@ -5,13 +5,13 @@ import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.auth.entity.AuthUser
 import com.tul.backend.auth.repository.AuthUserRepository
+import com.tul.backend.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.verify
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
 class AuthUserServiceTests : FeatureSpec({
@@ -20,15 +20,16 @@ class AuthUserServiceTests : FeatureSpec({
     scenario("login with valid credentials") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
+      val authUser = createAuthUser()
       val loginDTO = LoginDTO(
-        EmailAddress("test@test.cz"),
-        "password"
+        authUser.email,
+        authUser.password
       )
 
-      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns true
+      every { spec.authenticationHandler.authenticate(loginDTO, authUser, response) } returns true
+      every { spec.authUserRepository.findByEmail(authUser.email.value) } returns authUser
 
-      val result = spec.authUserService.login(loginDTO, request, response)
+      val result = spec.authUserService.login(loginDTO, response)
 
       result shouldBe true
     }
@@ -36,13 +37,13 @@ class AuthUserServiceTests : FeatureSpec({
     scenario("login with invalid email") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
+      val authUser = createAuthUser()
       val loginDTO = LoginDTO(
-        EmailAddress("test@"),
-        "password"
+        EmailAddress("test"),
+        authUser.password
       )
 
-      val result = spec.authUserService.login(loginDTO, request, response)
+      val result = spec.authUserService.login(loginDTO, response)
 
       result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
@@ -51,13 +52,12 @@ class AuthUserServiceTests : FeatureSpec({
     scenario("login with empty password") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
       val loginDTO = LoginDTO(
         EmailAddress("test@test.cz"),
         ""
       )
 
-      val result = spec.authUserService.login(loginDTO, request, response)
+      val result = spec.authUserService.login(loginDTO, response)
 
       result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
@@ -66,15 +66,32 @@ class AuthUserServiceTests : FeatureSpec({
     scenario("authenticate returns false") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
+      val authUser = createAuthUser()
       val loginDTO = LoginDTO(
-        EmailAddress("test@test.cz"),
-        "password"
+        authUser.email,
+        authUser.password
       )
 
-      every { spec.authenticationHandler.authenticate(loginDTO, request, response) } returns false
+      every { spec.authUserRepository.findByEmail(authUser.email.value) } returns authUser
+      every { spec.authenticationHandler.authenticate(loginDTO, authUser, response) } returns false
 
-      val result = spec.authUserService.login(loginDTO, request, response)
+      val result = spec.authUserService.login(loginDTO, response)
+
+      result shouldBe false
+    }
+
+    scenario("email not found") {
+      val spec = getSpec()
+      val response = mockk<HttpServletResponse>()
+      val authUser = createAuthUser()
+      val loginDTO = LoginDTO(
+        authUser.email,
+        authUser.password
+      )
+
+      every { spec.authUserRepository.findByEmail(authUser.email.value) } returns null
+
+      val result = spec.authUserService.login(loginDTO, response)
 
       result shouldBe false
     }

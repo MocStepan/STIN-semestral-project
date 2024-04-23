@@ -51,7 +51,7 @@ describe('WeatherDetailComponent', () => {
       weatherService.getCurrentWeather = jest.fn().mockReturnValue(of(response));
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component.getCurrentWeather();
       })
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Prague");
@@ -68,7 +68,7 @@ describe('WeatherDetailComponent', () => {
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component.getCurrentWeather();
       })
 
       expect(weatherSpy).toHaveBeenCalledWith("Prague");
@@ -91,7 +91,7 @@ describe('WeatherDetailComponent', () => {
       weatherService.getForecastWeather = jest.fn().mockReturnValue(of(response));
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component.getForecastWeather();
       })
 
       expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Prague");
@@ -107,7 +107,7 @@ describe('WeatherDetailComponent', () => {
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component.getForecastWeather();
       })
 
       expect(weatherSpy).toHaveBeenCalledWith("Prague");

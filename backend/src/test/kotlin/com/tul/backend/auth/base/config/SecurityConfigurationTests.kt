@@ -24,19 +24,18 @@ class SecurityConfigurationTests : FeatureSpec({
     scenario("securityFilterChain configuration") {
       val objectMapper = ObjectMapper()
       val jwtConfiguration = JwtConfiguration()
-      val authenticationProvider = jwtConfiguration.authenticationProvider(mockk())
       val logoutSuccessHandler = jwtConfiguration.logoutSuccessHandler()
       val cookieClearingLogoutHandler = jwtConfiguration.cookieClearingLogoutHandler()
+      val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
         objectMapper,
-        authenticationProvider,
         logoutSuccessHandler,
-        cookieClearingLogoutHandler
+        cookieClearingLogoutHandler,
+        jwtAuthenticationFilter
       )
 
       val httpSecurity = mockk<HttpSecurity>()
-      val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       every { httpSecurity.csrf(any()) } returns httpSecurity
       every { httpSecurity.cors(any()) } returns httpSecurity
@@ -48,21 +47,21 @@ class SecurityConfigurationTests : FeatureSpec({
       every { httpSecurity.exceptionHandling(any()) } returns httpSecurity
       every { httpSecurity.build() } returns mockk()
 
-      securityConfiguration.securityFilterChain(httpSecurity, jwtAuthenticationFilter)
+      securityConfiguration.securityFilterChain(httpSecurity)
     }
 
     scenario("authenticationExceptionHandler function") {
       val objectMapper = ObjectMapper()
       val jwtConfiguration = JwtConfiguration()
-      val authenticationProvider = jwtConfiguration.authenticationProvider(mockk())
       val logoutSuccessHandler = jwtConfiguration.logoutSuccessHandler()
       val cookieClearingLogoutHandler = jwtConfiguration.cookieClearingLogoutHandler()
+      val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
         objectMapper,
-        authenticationProvider,
         logoutSuccessHandler,
-        cookieClearingLogoutHandler
+        cookieClearingLogoutHandler,
+        jwtAuthenticationFilter
       )
       val errorDTO = ErrorDTO("Unauthorized")
 
@@ -72,6 +71,7 @@ class SecurityConfigurationTests : FeatureSpec({
       val response = mockk<HttpServletResponse>()
       val authException = mockk<AuthenticationException>()
       val printWriter = PrintWriter(System.out)
+
 
       every { response.contentType = MediaType.APPLICATION_JSON_VALUE } returns Unit
       every { response.status = HttpServletResponse.SC_UNAUTHORIZED } returns Unit

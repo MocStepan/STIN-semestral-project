@@ -8,7 +8,6 @@ import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 
@@ -18,15 +17,14 @@ class AuthUserControllerTests : FeatureSpec({
     scenario("login with valid credentials") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
       val loginDTO = LoginDTO(
         EmailAddress("email@email.cz"),
         "password"
       )
 
-      every { spec.authUserService.login(loginDTO, request, response) } returns true
+      every { spec.authUserService.login(loginDTO, response) } returns true
 
-      val result = spec.authUserController.login(loginDTO, request, response)
+      val result = spec.authUserController.login(loginDTO, response)
 
       result.statusCode shouldBe HttpStatus.OK
       result.body shouldBe true
@@ -35,15 +33,14 @@ class AuthUserControllerTests : FeatureSpec({
     scenario("login with invalid credentials") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val request = mockk<HttpServletRequest>()
       val loginDTO = LoginDTO(
         EmailAddress("email"),
         "password"
       )
 
-      every { spec.authUserService.login(loginDTO, request, response) } returns false
+      every { spec.authUserService.login(loginDTO, response) } returns false
 
-      val result = spec.authUserController.login(loginDTO, request, response)
+      val result = spec.authUserController.login(loginDTO, response)
 
       result.statusCode shouldBe HttpStatus.NOT_FOUND
       result.body shouldBe false
