@@ -3,7 +3,6 @@ package com.tul.backend.auth.controller
 import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.auth.service.AuthUserService
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -22,10 +21,9 @@ class AuthUserController(
   @PostMapping("/auth/login")
   fun login(
     @RequestBody loginDTO: LoginDTO,
-    request: HttpServletRequest,
     response: HttpServletResponse
   ): ResponseEntity<Boolean> {
-    val responseDTO = authUserService.login(loginDTO, request, response)
+    val responseDTO = authUserService.login(loginDTO, response)
     val status = if (responseDTO) HttpStatus.OK else HttpStatus.NOT_FOUND
     return ResponseEntity(responseDTO, status)
   }

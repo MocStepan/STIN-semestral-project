@@ -60,21 +60,23 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  getWeather() {
+  getCurrentWeather() {
     this.subscriptions.push(this.weatherService.getCurrentWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
         this.currentSignal.set(response)
       },
-      error: (error) => {
+      error: () => {
         this.notificationService.errorNotification('Město nenalezeno')
       }
     }))
+  }
 
+  getForecastWeather() {
     this.subscriptions.push(this.weatherService.getForecastWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
         this.weatherGraphComponent.createChart(response)
       },
-      error: (error) => {
+      error: () => {
         this.notificationService.errorNotification('Město nenalezeno')
       }
     }))

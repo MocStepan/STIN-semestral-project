@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServletResponse
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
-import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
@@ -28,28 +27,25 @@ import org.springframework.web.cors.CorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfiguration(
   private val objectMapper: ObjectMapper,
-  private val authenticationProvider: AuthenticationProvider,
   private val logoutSuccessHandler: LogoutSuccessHandler,
-  private val cookieClearingLogoutHandler: LogoutHandler
+  private val cookieClearingLogoutHandler: LogoutHandler,
+  private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
+
   private val userUnsecuredEndpoints =
     arrayOf(
       "/api/auth/login",
       "/api/auth/register",
       "/api/weather/current/*",
-      "/api/weather/forecast/*",
     )
 
   private val adminUnsecuredEndpoints =
     arrayOf(
-      "api/auth/test"
+      "api/auth/test",
     )
 
   @Bean
-  fun securityFilterChain(
-    http: HttpSecurity,
-    jwtAuthenticationFilter: JwtAuthenticationFilter
-  ): DefaultSecurityFilterChain =
+  fun securityFilterChain(http: HttpSecurity): DefaultSecurityFilterChain =
     http
       .csrf { it.disable() }
       .cors {
@@ -58,13 +54,12 @@ class SecurityConfiguration(
       .authorizeHttpRequests {
         it
           .requestMatchers(*userUnsecuredEndpoints).permitAll()
-          .requestMatchers(*adminUnsecuredEndpoints).hasRole(AuthUserRole.ADMIN.name)
-          .anyRequest().fullyAuthenticated()
+          .requestMatchers(*adminUnsecuredEndpoints).hasAuthority(AuthUserRole.ADMIN.name)
+          .anyRequest().authenticated()
       }
       .sessionManagement { session: SessionManagementConfigurer<HttpSecurity> ->
         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
       }
-      .authenticationProvider(authenticationProvider)
       .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
       .exceptionHandling {
         it.authenticationEntryPoint(authenticationExceptionHandler)

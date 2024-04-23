@@ -1,8 +1,8 @@
 package com.tul.backend.auth.service
 
+import com.tul.backend.auth.base.dto.AccessTokenClaims
+import com.tul.backend.auth.base.service.AccessTokenService
 import com.tul.backend.auth.base.service.CustomPasswordEncoder
-import com.tul.backend.auth.base.service.CustomUserDetailsService
-import com.tul.backend.auth.base.service.TokenService
 import com.tul.backend.auth.dto.LoginDTO
 import com.tul.backend.auth.dto.RegisterDTO
 import com.tul.backend.createAuthUser
@@ -13,11 +13,8 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
-import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.userdetails.User
+import org.springframework.http.ResponseCookie
 
 class AuthenticationHandlerTests : FeatureSpec({
 
@@ -25,30 +22,20 @@ class AuthenticationHandlerTests : FeatureSpec({
     scenario("authenticate with valid credentials") {
       val spec = getSpec()
       val authUser = createAuthUser()
+      val claims = AccessTokenClaims(authUser)
       val loginDTO = LoginDTO(
         authUser.email,
         authUser.password
       )
-      val authToken = UsernamePasswordAuthenticationToken(
-        loginDTO.email,
-        loginDTO.password
-      )
-      val userDetails = User.builder()
-        .username(authUser.email.value)
-        .password(authUser.password)
-        .roles(authUser.role.name)
-        .build()
-      val request = mockk<HttpServletRequest>()
+      val cookie = ResponseCookie.from("access_token", "token").build()
       val response = mockk<HttpServletResponse>()
 
+      every { spec.customPasswordEncoder.matches(loginDTO.password, authUser.password) } returns true
+      every { spec.accessTokenService.createClaims(authUser) } returns claims
+      every { spec.accessTokenService.createCookie(claims) } returns cookie
+      every { response.addHeader("Set-Cookie", cookie.toString()) } just runs
 
-      every { spec.authManager.authenticate(authToken) } returnsArgument 0
-      every { spec.customUserDetailsService.loadUserByUsername(loginDTO.email.value) } returns userDetails
-      every { spec.customPasswordEncoder.matches(loginDTO.password, userDetails.password) } returns true
-      every { spec.tokenService.generateAccessToken(userDetails) } returns "token"
-      every { spec.tokenService.updateContext("token", request, response) } just runs
-
-      val result = spec.authenticationHandler.authenticate(loginDTO, request, response)
+      val result = spec.authenticationHandler.authenticate(loginDTO, authUser, response)
 
       result shouldBe true
     }
@@ -56,32 +43,23 @@ class AuthenticationHandlerTests : FeatureSpec({
     scenario("authenticate with invalid password") {
       val spec = getSpec()
       val authUser = createAuthUser()
+      val claims = AccessTokenClaims(authUser)
       val loginDTO = LoginDTO(
         authUser.email,
         authUser.password
       )
-      val authToken = UsernamePasswordAuthenticationToken(
-        loginDTO.email,
-        loginDTO.password
-      )
-      val userDetails = User.builder()
-        .username(authUser.email.value)
-        .password(authUser.password)
-        .roles(authUser.role.name)
-        .build()
-      val request = mockk<HttpServletRequest>()
+      val cookie = ResponseCookie.from("access_token", "token").build()
       val response = mockk<HttpServletResponse>()
 
 
-      every { spec.authManager.authenticate(authToken) } returnsArgument 0
-      every { spec.customUserDetailsService.loadUserByUsername(loginDTO.email.value) } returns userDetails
-      every { spec.customPasswordEncoder.matches(loginDTO.password, userDetails.password) } returns false
+      every { spec.customPasswordEncoder.matches(loginDTO.password, authUser.password) } returns false
 
-      val result = spec.authenticationHandler.authenticate(loginDTO, request, response)
+      val result = spec.authenticationHandler.authenticate(loginDTO, authUser, response)
 
       result shouldBe false
-      verify(exactly = 0) { spec.tokenService.generateAccessToken(userDetails) }
-      verify(exactly = 0) { spec.tokenService.updateContext("token", request, response) }
+      verify(exactly = 0) { spec.accessTokenService.createClaims(authUser) }
+      verify(exactly = 0) { spec.accessTokenService.createCookie(claims) }
+      verify(exactly = 0) { response.addHeader("Set-Cookie", cookie.toString()) }
     }
   }
 
@@ -106,17 +84,13 @@ class AuthenticationHandlerTests : FeatureSpec({
 })
 
 private class AuthenticationHandlerSpecWrapper(
-  val authManager: AuthenticationManager,
-  val customUserDetailsService: CustomUserDetailsService,
-  val tokenService: TokenService,
+  val accessTokenService: AccessTokenService,
   val customPasswordEncoder: CustomPasswordEncoder
 ) {
   val authenticationHandler = AuthenticationHandler(
-    authManager,
-    customUserDetailsService,
-    tokenService,
+    accessTokenService,
     customPasswordEncoder
   )
 }
 
-private fun getSpec() = AuthenticationHandlerSpecWrapper(mockk(), mockk(), mockk(), mockk())
+private fun getSpec() = AuthenticationHandlerSpecWrapper(mockk(), mockk())

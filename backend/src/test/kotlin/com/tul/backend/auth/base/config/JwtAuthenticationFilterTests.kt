@@ -1,7 +1,8 @@
 package com.tul.backend.auth.base.config
 
-import com.tul.backend.auth.base.service.TokenFilterService
-import com.tul.backend.auth.base.valueobject.AuthUserRole
+import com.tul.backend.auth.base.dto.AccessTokenClaims
+import com.tul.backend.auth.base.service.TokenFilter
+import com.tul.backend.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.mockk.every
 import io.mockk.just
@@ -12,7 +13,6 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.junit.platform.commons.util.ReflectionUtils
-import org.springframework.security.core.userdetails.User
 
 class JwtAuthenticationFilterTests : FeatureSpec({
 
@@ -23,14 +23,10 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
       val filterChain = mockk<FilterChain>()
-      val authUser = User.builder()
-        .username("email")
-        .password("password")
-        .roles(AuthUserRole.ADMIN.name)
-        .build()
+      val authUser = createAuthUser()
+      val claims = AccessTokenClaims(authUser)
 
-      every { spec.tokenFilterService.validateRequest(request, response) } returns authUser
-      every { spec.tokenFilterService.updateContext(authUser, request, response) } just runs
+      every { spec.tokenFilter.validateRequest(request) } returns claims
       every { filterChain.doFilter(request, response) } just runs
 
       spec.doFilterInternal(request, response, filterChain)
@@ -43,19 +39,13 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
       val filterChain = mockk<FilterChain>()
-      val authUser = User.builder()
-        .username("email")
-        .password("password")
-        .roles(AuthUserRole.ADMIN.name)
-        .build()
 
-      every { spec.tokenFilterService.validateRequest(request, response) } returns null
+      every { spec.tokenFilter.validateRequest(request) } returns null
       every { filterChain.doFilter(request, response) } just runs
 
       spec.doFilterInternal(request, response, filterChain)
 
       verify { filterChain.doFilter(request, response) }
-      verify(exactly = 0) { spec.tokenFilterService.updateContext(authUser, request, response) }
     }
   }
 })
@@ -69,10 +59,10 @@ private val doFilterInternalMethod = ReflectionUtils.findMethod(
 ).get()
 
 private class AuthJwtServiceSpecWrapper(
-  val tokenFilterService: TokenFilterService
+  val tokenFilter: TokenFilter
 ) {
   val jwtAuthenticationFilter = JwtAuthenticationFilter(
-    tokenFilterService,
+    tokenFilter,
   )
 
   // via reflection, because the method is protected
