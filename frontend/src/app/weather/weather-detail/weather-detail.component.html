@@ -7,7 +7,7 @@
           <input [formControl]="cityFormControl" matInput placeholder="Vyberte počasí" type="text">
         </mat-form-field>
 
-        <button (click)="getCurrentWeather()" color="primary" mat-raised-button>Hledat</button>
+        <button (click)="getWeather()" color="primary" mat-raised-button>Hledat</button>
       </mat-card>
     </div>
   </div>
@@ -16,20 +16,27 @@
     <div class="flex-container-center">
       <div class="row">
         <mat-card class="col">
-          <mat-card-title>Current Weather</mat-card-title>
-          <mat-icon *ngIf="currentSignal().isDay">brightness_5</mat-icon>
-          <mat-icon *ngIf="!currentSignal().isDay">brightness_1</mat-icon>
+          <mat-card-title>Aktuální počasí</mat-card-title>
+          <mat-card-subtitle>
+            <mat-icon *ngIf="currentSignal().isDay">brightness_5</mat-icon>
+            <mat-icon *ngIf="!currentSignal().isDay">brightness_1</mat-icon>
+          </mat-card-subtitle>
           <mat-card-content>
             <div *ngIf="currentSignal()">
-              <p>Čas: {{ currentSignal().time }}</p>
-              <p>Teplota: {{ currentSignal().temperature }}°C</p>
-              <p>Oblačnost: {{ currentSignal().cloudCover }}</p>
-              <p>Rychlost větru: {{ currentSignal().temperature }}</p>
+              <p>Datum: {{ moment(currentSignal().time).format("DD-MM-YYYY") }}</p>
+              <p>Čas: {{ moment(currentSignal().time).format("HH:MM") }}</p>
+              <p>Teplota: {{ currentSignal().temperature }} °C</p>
+              <p>Oblačnost: {{ currentSignal().cloudCover }} %</p>
+              <p>Rychlost větru: {{ currentSignal().temperature }} m/s</p>
             </div>
           </mat-card-content>
         </mat-card>
-        <mat-card class="col">
-          <mat-card-title>Forecast Weather</mat-card-title>
+        <mat-card *ngIf="isUserSignedIn()" class="col">
+          <mat-card-title>Graf předpovědi počasí</mat-card-title>
+          <mat-card-subtitle>
+            <mat-icon *ngIf="currentSignal().isDay">brightness_5</mat-icon>
+            <mat-icon *ngIf="!currentSignal().isDay">brightness_1</mat-icon>
+          </mat-card-subtitle>
           <mat-card-content>
             <app-weather-graph></app-weather-graph>
           </mat-card-content>

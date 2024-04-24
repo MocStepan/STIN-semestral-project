@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from "../service/auth.service";
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {LoginForm} from "../model/LoginForm";
@@ -11,6 +11,7 @@ import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
 import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 import {Router} from "@angular/router";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-login',
@@ -38,20 +39,27 @@ import {Router} from "@angular/router";
     }
   ]
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   protected formGroup!: FormGroup
-  private formBuilder = inject(FormBuilder)
-  private authService = inject(AuthService)
-  private notificationService = inject(FrontendNotificationService)
-  private router = inject(Router)
+  private subscriptions: Subscription[] = [];
+
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private notificationService: FrontendNotificationService,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.formGroup = this.buildFormGroup()
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+  }
+
   onSubmit() {
     if (this.formGroup.valid) {
-      this.authService.login(this.formGroup.value).subscribe({
+      this.subscriptions.push(this.authService.login(this.formGroup.value).subscribe({
         next: () => {
           this.notificationService.successNotification("Ůspěšně jste se přihlásili")
           this.router.navigate(['/'])
@@ -59,7 +67,7 @@ export class LoginComponent implements OnInit {
         error: () => {
           this.notificationService.errorNotification("Špatné heslo nebo email")
         }
-      })
+      }))
     } else {
       this.notificationService.errorNotification("Formulář obsahuje nevalidní informace")
     }
