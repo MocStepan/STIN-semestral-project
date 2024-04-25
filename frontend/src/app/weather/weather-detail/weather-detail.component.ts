@@ -67,7 +67,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.isUserSignedIn.set(this.authService.isUserSignedIn())
+    this.isUserSignedIn.set(this.authService.isSignedIn())
   }
 
   ngOnDestroy(): void {

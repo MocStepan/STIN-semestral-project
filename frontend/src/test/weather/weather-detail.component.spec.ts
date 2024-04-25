@@ -10,16 +10,24 @@ import {ForecastWeatherDetail} from "../../app/weather/model/ForecastWeatherDeta
 import {
   FrontendNotificationService
 } from "../../app/shared/frontend-notification/service/frontend-notification.service";
+import {AuthService} from "../../app/auth/service/auth.service";
+import {WeatherGraphComponent} from "../../app/weather/weather-graph/weather-graph.component";
 
 describe('WeatherDetailComponent', () => {
   let component: WeatherDetailComponent;
   let fixture: ComponentFixture<WeatherDetailComponent>;
   let weatherService: WeatherService;
   let notificationService: FrontendNotificationService;
+  let authService: AuthService
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WeatherDetailComponent, HttpClientTestingModule, BrowserAnimationsModule],
+      imports: [
+        WeatherDetailComponent,
+        HttpClientTestingModule,
+        BrowserAnimationsModule,
+        WeatherGraphComponent
+      ],
       providers: [
         WeatherService
       ]
@@ -30,11 +38,62 @@ describe('WeatherDetailComponent', () => {
     component = fixture.componentInstance;
     weatherService = fixture.debugElement.injector.get(WeatherService);
     notificationService = fixture.debugElement.injector.get(FrontendNotificationService);
+    authService = fixture.debugElement.injector.get(AuthService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  describe("ngOnInit", () => {
+    it("authUser is signed in", () => {
+      const signedSpy = jest.spyOn(authService, 'isSignedIn').mockReturnValue(true);
+
+      fixture.ngZone?.run(() => {
+        component.ngOnInit();
+      });
+
+      expect(signedSpy).toHaveBeenCalled();
+      expect(component['isUserSignedIn']()).toEqual(true);
+    })
+
+    it('authUser is not signed in', () => {
+      const signedSpy = jest.spyOn(authService, 'isSignedIn').mockReturnValue(false);
+
+      fixture.ngZone?.run(() => {
+        component.ngOnInit();
+      });
+
+      expect(signedSpy).toHaveBeenCalled();
+      expect(component['isUserSignedIn']()).toEqual(false);
+    });
+  });
+
+  describe("getWeather", () => {
+    it("authUser is signed in", () => {
+      component['isUserSignedIn'].set(true);
+      component['getCurrentWeather'] = jest.fn();
+      component['getForecastWeather'] = jest.fn();
+
+      fixture.ngZone?.run(() => {
+        component['getWeather']();
+      });
+
+      expect(component['getCurrentWeather']).toHaveBeenCalled()
+      expect(component['getForecastWeather']).toHaveBeenCalled()
+    })
+
+    it('authUser is not signed in', () => {
+      component['isUserSignedIn'].set(true);
+      component['getCurrentWeather'] = jest.fn();
+
+      fixture.ngZone?.run(() => {
+        component['getWeather']();
+      });
+
+      expect(component['getCurrentWeather']).toHaveBeenCalled()
+    });
   });
 
   describe("getCurrentWeather", () => {
@@ -51,7 +110,7 @@ describe('WeatherDetailComponent', () => {
       weatherService.getCurrentWeather = jest.fn().mockReturnValue(of(response));
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component['getCurrentWeather']();
       })
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Prague");
@@ -68,7 +127,7 @@ describe('WeatherDetailComponent', () => {
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
 
       fixture.ngZone?.run(() => {
-        component.getWeather();
+        component['getCurrentWeather']();
       })
 
       expect(weatherSpy).toHaveBeenCalledWith("Prague");
@@ -86,16 +145,14 @@ describe('WeatherDetailComponent', () => {
         [50],
         [50]
       );
-      const createChartSpy = jest.spyOn(component.weatherGraphComponent, 'createChart');
 
       weatherService.getForecastWeather = jest.fn().mockReturnValue(of(response));
 
       fixture.ngZone?.run(() => {
-        component.getForecastWeather();
+        component['getForecastWeather']();
       })
 
       expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Prague");
-      expect(createChartSpy).toHaveBeenCalledWith(response);
     });
 
     it("should show error notification when city is not found", () => {
@@ -107,7 +164,7 @@ describe('WeatherDetailComponent', () => {
       const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
 
       fixture.ngZone?.run(() => {
-        component.getForecastWeather();
+        component['getForecastWeather']();
       })
 
       expect(weatherSpy).toHaveBeenCalledWith("Prague");

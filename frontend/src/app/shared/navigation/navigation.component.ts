@@ -46,7 +46,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.currentUrl = this.router.url
-    this.isUserSignedIn.set(this.authService.isUserSignedIn())
+    this.isUserSignedIn.set(this.authService.isSignedIn())
     this.navigationRouter()
   }
 
@@ -58,7 +58,7 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.router.events.pipe(filter((event) =>
       event instanceof NavigationEnd)
     ).subscribe((event) => {
-      this.isUserSignedIn.set(this.authService.isUserSignedIn())
+      this.isUserSignedIn.set(this.authService.isSignedIn())
       this.currentUrl = (event as NavigationEnd).url
       this.changeDetectorRef.detectChanges()
     }));
