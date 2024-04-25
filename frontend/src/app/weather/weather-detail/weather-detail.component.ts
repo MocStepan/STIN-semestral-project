@@ -1,13 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  ViewChild,
-  WritableSignal
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
 import {MatFormField, MatPrefix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
@@ -22,7 +13,6 @@ import {FrontendNotificationService} from "../../shared/frontend-notification/se
 import {WeatherGraphComponent} from "../weather-graph/weather-graph.component";
 import {Subscription} from "rxjs";
 import {AuthService} from "../../auth/service/auth.service";
-import {RegisterComponent} from "../../auth/register/register.component";
 import moment from "moment";
 
 @Component({
@@ -59,6 +49,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
   protected cityFormControl = new FormControl();
   protected currentSignal: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
   protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  protected readonly moment = moment;
   private subscriptions: Subscription[] = [];
 
   constructor(private weatherService: WeatherService,
@@ -91,6 +82,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
       }
     }))
   }
+
   private getForecastWeather() {
     this.subscriptions.push(this.weatherService.getForecastWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
@@ -101,6 +93,4 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
       }
     }))
   }
-
-  protected readonly moment = moment;
 }

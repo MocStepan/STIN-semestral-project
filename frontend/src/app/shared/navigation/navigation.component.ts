@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  inject,
   OnDestroy,
   OnInit,
   signal,
@@ -54,6 +53,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe())
   }
 
+  isSelected(navigationUrl: string) {
+    return this.currentUrl == navigationUrl
+  }
+
   private navigationRouter() {
     this.subscriptions.push(this.router.events.pipe(filter((event) =>
       event instanceof NavigationEnd)
@@ -62,9 +65,5 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.currentUrl = (event as NavigationEnd).url
       this.changeDetectorRef.detectChanges()
     }));
-  }
-
-  isSelected(navigationUrl: string) {
-    return this.currentUrl == navigationUrl
   }
 }
