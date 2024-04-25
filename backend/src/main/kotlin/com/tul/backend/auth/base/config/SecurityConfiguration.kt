@@ -34,9 +34,9 @@ class SecurityConfiguration(
 
   private val userUnsecuredEndpoints =
     arrayOf(
-      "/api/auth/login",
-      "/api/auth/register",
-      "/api/weather/current/*",
+      "/api/v1/auth/login",
+      "/api/v1/auth/register",
+      "/api/v1/weather/current/*",
     )
 
   private val adminUnsecuredEndpoints =

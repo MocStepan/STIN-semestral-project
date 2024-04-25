@@ -9,5 +9,8 @@ data class RegisterDTO(
   val passwordConfirmation: String
 ) {
   fun isValid(): Boolean =
-    username.isNotBlank() && password.isNotBlank() && email.isValid() && password == passwordConfirmation
+    username.isNotBlank() &&
+      password.isNotBlank() &&
+      email.isValid() &&
+      password == passwordConfirmation
 }

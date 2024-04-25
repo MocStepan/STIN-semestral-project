@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 class WeatherController(
   private val weatherService: WeatherService,
 ) {
-  @GetMapping("/weather/current/{location}")
+  @GetMapping("/v1/weather/current/{location}")
   fun getCurrentWeather(
     @PathVariable location: String
   ): ResponseEntity<CurrentWeatherDTO?> {
@@ -24,7 +24,7 @@ class WeatherController(
     return ResponseEntity(response, status)
   }
 
-  @GetMapping("/weather/forecast/{location}")
+  @GetMapping("/v1/weather/forecast/{location}")
   fun getForecastWeather(
     @PathVariable location: String
   ): ResponseEntity<ForecastWeatherDTO?> {

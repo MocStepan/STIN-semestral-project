@@ -21,6 +21,7 @@ class AccessTokenService(
 
   val COOKIE_NAME = "access_token"
 
+  // does not work, fix in issue https://github.com/MocStepan/STIN-semestral-project/issues/55
   private val maxAge = duration.milliseconds
 
   private val jwtService = JwtService(secret)
