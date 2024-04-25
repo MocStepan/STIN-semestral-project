@@ -1,8 +1,9 @@
-## Describe your changes
+## Popiš změny
 
-## Issue ticket number and link
+## Issue link
 
-
-## Checklist before requesting a review
-- [ ] I have performed a self-review of my code
-- [ ] If it is a core feature, I have added thorough tests.
+## Zkontrolovat
+- [ ] funkčnost: sám jsem si zkontroloval funkčnost
+- [ ] název: pull requst název dává najevo co se změnilo
+- [ ] endpoints: zkusil jsem si s přihlášením a bez
+- [ ] testy: přidal jsem srozumitelné testy

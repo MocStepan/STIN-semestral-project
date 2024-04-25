@@ -18,7 +18,7 @@ class AuthUserController(
   private val authUserService: AuthUserService,
 ) {
 
-  @PostMapping("/auth/login")
+  @PostMapping("/v1/auth/login")
   fun login(
     @RequestBody loginDTO: LoginDTO,
     response: HttpServletResponse
@@ -28,7 +28,7 @@ class AuthUserController(
     return ResponseEntity(responseDTO, status)
   }
 
-  @PostMapping("/auth/register")
+  @PostMapping("/v1/auth/register")
   fun register(
     @RequestBody registerDTO: RegisterDTO,
   ): ResponseEntity<Boolean> {
