@@ -12,7 +12,7 @@ class JwtClaims(
   companion object {
     fun from(claims: Map<String, *>, duration: Duration): JwtClaims {
       val now = Date()
-      val expiration = Date(now.time + duration.inWholeSeconds)
+      val expiration = Date(now.time + duration.inWholeMilliseconds)
 
       return JwtClaims(
         claims = claims,
