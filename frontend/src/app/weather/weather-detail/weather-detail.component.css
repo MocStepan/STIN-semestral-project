@@ -28,6 +28,8 @@ form {
 
 .mat-mdc-card {
   background: white;
+  border-radius: 1em;
+  padding: 1em;
 }
 
 .data-content {
@@ -39,4 +41,9 @@ form {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+.mat-card-title {
+  font-size: 1.5em;
+  font-weight: bold;
 }

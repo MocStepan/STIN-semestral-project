@@ -39,7 +39,7 @@ export class AuthService {
     return this.httpService.post(this.rootHttpUrl + 'register', value)
   }
 
-  isUserSignedIn() {
+  isSignedIn() {
     return sessionStorage.getItem('auth') === 'true'
   }
 

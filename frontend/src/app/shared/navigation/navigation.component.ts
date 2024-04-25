@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  inject,
   OnDestroy,
   OnInit,
   signal,
@@ -39,22 +38,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
   private readonly subscriptions: Subscription[] = []
   private currentUrl: string = ''
 
-
-  private router = inject(Router)
-  private authService = inject(AuthService)
-  private changeDetectorRef = inject(ChangeDetectorRef)
+  constructor(private router: Router,
+              private authService: AuthService,
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.currentUrl = this.router.url
-    this.isUserSignedIn.set(this.authService.isUserSignedIn())
-    const routerSubscription = this.router.events.pipe(filter((event) =>
-      event instanceof NavigationEnd)
-    ).subscribe((event) => {
-      this.isUserSignedIn.set(this.authService.isUserSignedIn())
-      this.currentUrl = (event as NavigationEnd).url
-      this.changeDetectorRef.detectChanges()
-    });
-    this.subscriptions.push(routerSubscription)
+    this.isUserSignedIn.set(this.authService.isSignedIn())
+    this.navigationRouter()
   }
 
   ngOnDestroy(): void {
@@ -63,5 +55,15 @@ export class NavigationComponent implements OnInit, OnDestroy {
 
   isSelected(navigationUrl: string) {
     return this.currentUrl == navigationUrl
+  }
+
+  private navigationRouter() {
+    this.subscriptions.push(this.router.events.pipe(filter((event) =>
+      event instanceof NavigationEnd)
+    ).subscribe((event) => {
+      this.isUserSignedIn.set(this.authService.isSignedIn())
+      this.currentUrl = (event as NavigationEnd).url
+      this.changeDetectorRef.detectChanges()
+    }));
   }
 }

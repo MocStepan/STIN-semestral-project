@@ -1,6 +1,6 @@
 body {
   background-color: #2c3338;
-  color: #606468;
+  color: black;
   font-family: 'Open Sans', sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
@@ -44,4 +44,8 @@ body {
   justify-content: center;
   align-items: center;
   margin: 1em auto;
+}
+
+.mat-mdc-card-subtitle {
+  color: black !important;
 }

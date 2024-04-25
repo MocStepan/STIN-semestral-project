@@ -1,26 +1,19 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  ViewChild,
-  WritableSignal
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
 import {MatFormField, MatPrefix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
-import {MatCard, MatCardContent, MatCardTitle} from "@angular/material/card";
+import {MatCard, MatCardContent, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
 import {MatIcon} from "@angular/material/icon";
 import {MatToolbar} from "@angular/material/toolbar";
 import {NgIf} from "@angular/common";
-import {FormControl, ReactiveFormsModule} from "@angular/forms";
+import {FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 import {WeatherService} from "../service/weather.service";
 import {CurrentWeatherDetail} from "../model/CurrentWeatherDetail";
 import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 import {WeatherGraphComponent} from "../weather-graph/weather-graph.component";
 import {Subscription} from "rxjs";
+import {AuthService} from "../../auth/service/auth.service";
+import moment from "moment";
 
 @Component({
   selector: 'app-weather-detail',
@@ -38,29 +31,48 @@ import {Subscription} from "rxjs";
     MatPrefix,
     MatCardContent,
     MatCardTitle,
-    WeatherGraphComponent
+    WeatherGraphComponent,
+    MatCardSubtitle
   ],
-  providers: [WeatherService],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi: true,
+      useExisting: WeatherDetailComponent
+    }
+  ],
   templateUrl: './weather-detail.component.html',
   styleUrl: './weather-detail.component.css'
 })
 export class WeatherDetailComponent implements OnInit, OnDestroy {
   @ViewChild(WeatherGraphComponent) weatherGraphComponent!: WeatherGraphComponent;
-
   protected cityFormControl = new FormControl();
   protected currentSignal: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
-  private weatherService = inject(WeatherService);
-  private notificationService = inject(FrontendNotificationService);
+  protected isUserSignedIn: WritableSignal<boolean> = signal(false)
+  protected readonly moment = moment;
   private subscriptions: Subscription[] = [];
 
+  constructor(private weatherService: WeatherService,
+              private notificationService: FrontendNotificationService,
+              private authService: AuthService) {
+  }
+
   ngOnInit(): void {
+    this.isUserSignedIn.set(this.authService.isSignedIn())
   }
 
   ngOnDestroy(): void {
     this.subscriptions.forEach(subscription => subscription.unsubscribe());
   }
 
-  getCurrentWeather() {
+  getWeather() {
+    this.getCurrentWeather()
+    if (this.isUserSignedIn()) {
+      this.getForecastWeather()
+    }
+  }
+
+  private getCurrentWeather() {
     this.subscriptions.push(this.weatherService.getCurrentWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
         this.currentSignal.set(response)
@@ -71,7 +83,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
     }))
   }
 
-  getForecastWeather() {
+  private getForecastWeather() {
     this.subscriptions.push(this.weatherService.getForecastWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
         this.weatherGraphComponent.createChart(response)

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ForecastWeatherDetail} from "../model/ForecastWeatherDetal";
 import {Chart, registerables} from 'chart.js';
 import moment from "moment";
@@ -10,15 +10,12 @@ import moment from "moment";
   templateUrl: './weather-graph.component.html',
   styleUrl: './weather-graph.component.css'
 })
-export class WeatherGraphComponent implements OnInit, OnDestroy {
+export class WeatherGraphComponent implements OnInit {
   protected chart: any;
 
   ngOnInit() {
     Chart.register(...registerables);
     this.createChart(ForecastWeatherDetail.createDefault());
-  }
-
-  ngOnDestroy(): void {
   }
 
   createChart(data: ForecastWeatherDetail) {
@@ -32,19 +29,22 @@ export class WeatherGraphComponent implements OnInit, OnDestroy {
         labels: data.time.map(time => moment(time).format("DD/MM")),
         datasets: [
           {
-            label: "Min Temp",
+            label: "Min teplota (°C)",
             data: data.minTemperature,
-            backgroundColor: 'blue'
+            backgroundColor: 'blue',
+            borderColor: 'grey'
           },
           {
-            label: "Max Temp",
+            label: "Max teplota (°C)",
             data: data.maxTemperature,
-            backgroundColor: 'red'
+            backgroundColor: 'red',
+            borderColor: 'grey'
           },
           {
-            label: "Max wind",
+            label: "Max rychlsot větru (m/s)",
             data: data.maxWindSpeed,
-            backgroundColor: 'grey'
+            backgroundColor: 'black',
+            borderColor: 'grey'
           }
         ]
       },

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {AuthService} from "../service/auth.service";
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
@@ -11,6 +11,7 @@ import {NgIf} from "@angular/common";
 import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
 import {Router} from "@angular/router";
 import {RegistrationForm} from "../model/RegistrationForm";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -30,8 +31,6 @@ import {RegistrationForm} from "../model/RegistrationForm";
   templateUrl: './register.component.html',
   styleUrl: '../style/auth.component.css',
   providers: [
-    AuthService,
-    FormBuilder,
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
@@ -39,20 +38,27 @@ import {RegistrationForm} from "../model/RegistrationForm";
     }
   ]
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
   protected formGroup!: FormGroup
-  private formBuilder = inject(FormBuilder)
-  private authService = inject(AuthService)
-  private notificationService = inject(FrontendNotificationService)
-  private router = inject(Router)
+  private subscriptions: Subscription[] = [];
+
+  constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
+              private notificationService: FrontendNotificationService,
+              private router: Router) {
+  }
 
   ngOnInit(): void {
     this.formGroup = this.buildFormGroup()
   }
 
+  ngOnDestroy(): void {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe())
+  }
+
   onSubmit() {
     if (this.formGroup.valid) {
-      this.authService.register(this.formGroup.value).subscribe({
+      this.subscriptions.push(this.authService.register(this.formGroup.value).subscribe({
         next: () => {
           this.notificationService.successNotification("Registrace proběhla úspěšně")
           this.router.navigate(['/login'])
@@ -60,7 +66,7 @@ export class RegisterComponent implements OnInit {
         error: () => {
           this.notificationService.errorNotification("Registrace se nezdařila")
         }
-      })
+      }))
     } else {
       this.notificationService.errorNotification("Formulář obsahuje nevalidní informace")
     }
