@@ -7,9 +7,7 @@ import {WeatherService} from "../../app/weather/service/weather.service";
 import {of, throwError} from "rxjs";
 import {CurrentWeatherDetail} from "../../app/weather/model/CurrentWeatherDetail";
 import {ForecastWeatherDetail} from "../../app/weather/model/ForecastWeatherDetal";
-import {
-  FrontendNotificationService
-} from "../../app/shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../app/shared/notification/service/notification.service";
 import {AuthService} from "../../app/auth/service/auth.service";
 import {WeatherGraphComponent} from "../../app/weather/weather-graph/weather-graph.component";
 
@@ -17,7 +15,7 @@ describe('WeatherDetailComponent', () => {
   let component: WeatherDetailComponent;
   let fixture: ComponentFixture<WeatherDetailComponent>;
   let weatherService: WeatherService;
-  let notificationService: FrontendNotificationService;
+  let notificationService: NotificationService;
   let authService: AuthService
 
   beforeEach(async () => {
@@ -37,7 +35,7 @@ describe('WeatherDetailComponent', () => {
     fixture = TestBed.createComponent(WeatherDetailComponent);
     component = fixture.componentInstance;
     weatherService = fixture.debugElement.injector.get(WeatherService);
-    notificationService = fixture.debugElement.injector.get(FrontendNotificationService);
+    notificationService = fixture.debugElement.injector.get(NotificationService);
     authService = fixture.debugElement.injector.get(AuthService);
     fixture.detectChanges();
   });
@@ -114,12 +112,12 @@ describe('WeatherDetailComponent', () => {
       })
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Prague");
-      expect(component['currentSignal']()).toEqual(response);
+      expect(component['currentWeather']()).toEqual(response);
     });
 
     it("should show error notification when city is not found", () => {
       const defaultWeather = CurrentWeatherDetail.createDefault();
-      component['currentSignal'].set(defaultWeather);
+      component['currentWeather'].set(defaultWeather);
       component['cityFormControl'].setValue("Prague");
       const error = {status: 500}
 
@@ -131,7 +129,7 @@ describe('WeatherDetailComponent', () => {
       })
 
       expect(weatherSpy).toHaveBeenCalledWith("Prague");
-      expect(component['currentSignal']()).toEqual(defaultWeather);
+      expect(component['currentWeather']()).toEqual(defaultWeather);
       expect(notificationSpy).toHaveBeenCalledWith('Město nenalezeno');
     });
   });

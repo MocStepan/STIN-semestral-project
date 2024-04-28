@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 @Injectable({
   providedIn: 'root'
 })
-export class FrontendNotificationService {
+export class NotificationService {
 
   successNotification(successMessage: string): void {
     Swal.fire({

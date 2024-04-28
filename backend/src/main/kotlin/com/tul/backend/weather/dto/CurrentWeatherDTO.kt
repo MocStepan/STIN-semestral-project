@@ -8,7 +8,8 @@ data class CurrentWeatherDTO(
   val temperature: Double,
   val cloudCover: Int,
   val windSpeed: Double,
-  val isDay: Boolean
+  val isDay: Boolean,
+  var location: LocationDTO? = null
 ) {
 
   companion object {

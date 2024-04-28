@@ -1,17 +1,23 @@
 package com.tul.backend.weather.controller
 
+import com.tul.backend.createUserClaims
 import com.tul.backend.weather.dto.CurrentWeatherDTO
 import com.tul.backend.weather.dto.ForecastWeatherDTO
+import com.tul.backend.weather.dto.UserWeatherLocationDTO
 import com.tul.backend.weather.service.WeatherService
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.mockk.every
 import io.mockk.mockk
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.Authentication
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 class WeatherControllerTests : FeatureSpec({
+
+  val authentication = mockk<Authentication>()
+  val userClaims = createUserClaims()
 
   feature("getCurrentWeather") {
     scenario("should return current weather") {
@@ -81,6 +87,89 @@ class WeatherControllerTests : FeatureSpec({
       val response = spec.weatherController.getForecastWeather("test")
 
       response.body shouldBe null
+      response.statusCode shouldBe HttpStatus.NOT_FOUND
+    }
+  }
+
+  feature("saveUserWeatherLocation") {
+    scenario("should return true with status ok") {
+      val spec = getSpec()
+      val location = "test"
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.saveUserWeatherLocation(location, userClaims) } returns true
+
+      val response = spec.weatherController.saveUserWeatherLocation(location, authentication)
+
+      response.body shouldBe true
+      response.statusCode shouldBe HttpStatus.OK
+    }
+
+    scenario("should return false with status not fount") {
+      val spec = getSpec()
+      val location = "test"
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.saveUserWeatherLocation(location, userClaims) } returns false
+
+      val response = spec.weatherController.saveUserWeatherLocation(location, authentication)
+
+      response.body shouldBe false
+      response.statusCode shouldBe HttpStatus.BAD_REQUEST
+    }
+  }
+
+  feature("getUserWeatherLocations") {
+    scenario("should return list of favorite locations") {
+      val spec = getSpec()
+      val userWeatherLocation = UserWeatherLocationDTO(1, "test")
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.getUserWeatherLocations(userClaims) } returns listOf(userWeatherLocation)
+
+      val response = spec.weatherController.getUserWeatherLocations(authentication)
+
+      response.statusCode shouldBe HttpStatus.OK
+      val first = response.body!!.first()
+      first.id shouldBe userWeatherLocation.id
+      first.location shouldBe userWeatherLocation.location
+    }
+
+    scenario("should return empty list with status ok") {
+      val spec = getSpec()
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.getUserWeatherLocations(userClaims) } returns null
+
+      val response = spec.weatherController.getUserWeatherLocations(authentication)
+
+      response.body shouldBe null
+      response.statusCode shouldBe HttpStatus.NOT_FOUND
+    }
+  }
+
+  feature("deleteUserWeatherLocation") {
+    scenario("should return true with status ok") {
+      val spec = getSpec()
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.deleteUserWeatherLocation(1, userClaims) } returns true
+
+      val response = spec.weatherController.deleteUserWeatherLocation(1, authentication)
+
+      response.body shouldBe true
+      response.statusCode shouldBe HttpStatus.OK
+    }
+
+    scenario("should return false with status not fount") {
+      val spec = getSpec()
+
+      every { authentication.principal } returns userClaims
+      every { spec.weatherService.deleteUserWeatherLocation(1, userClaims) } returns false
+
+      val response = spec.weatherController.deleteUserWeatherLocation(1, authentication)
+
+      response.body shouldBe false
       response.statusCode shouldBe HttpStatus.NOT_FOUND
     }
   }

@@ -1,17 +1,15 @@
-import {
-  FrontendNotificationService
-} from "../../../app/shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../../app/shared/notification/service/notification.service";
 import Swal from "sweetalert2";
 
 jest.mock('sweetalert2', () => ({
   fire: jest.fn()
 }));
 
-describe('FrontendNotificationService', () => {
-  let notificationService: FrontendNotificationService;
+describe('NotificationService', () => {
+  let notificationService: NotificationService;
 
   beforeEach(() => {
-    notificationService = new FrontendNotificationService();
+    notificationService = new NotificationService();
   });
 
   afterEach(() => {

@@ -34,6 +34,8 @@ body {
 
 .flex-container-end {
   justify-content: flex-end;
+  align-items: center;
+  margin: 1em auto;
 }
 
 .flex-container-start {

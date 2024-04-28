@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.tul.backend.auth.base.dto.AccessTokenClaims
 import com.tul.backend.createAuthUser
 import com.tul.backend.objectMapper
-import io.github.oshai.kotlinlogging.KotlinLogging
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe

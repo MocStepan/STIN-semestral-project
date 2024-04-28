@@ -8,7 +8,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {MatToolbar} from "@angular/material/toolbar";
 import {NgIf} from "@angular/common";
-import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../shared/notification/service/notification.service";
 import {Router} from "@angular/router";
 import {RegistrationForm} from "../model/RegistrationForm";
 import {Subscription} from "rxjs";
@@ -44,7 +44,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
-              private notificationService: FrontendNotificationService,
+              private notificationService: NotificationService,
               private router: Router) {
   }
 
