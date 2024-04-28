@@ -9,7 +9,7 @@ import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {NgIf} from "@angular/common";
-import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../shared/notification/service/notification.service";
 import {Router} from "@angular/router";
 import {Subscription} from "rxjs";
 
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   constructor(private formBuilder: FormBuilder,
               private authService: AuthService,
-              private notificationService: FrontendNotificationService,
+              private notificationService: NotificationService,
               private router: Router) {
   }
 

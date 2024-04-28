@@ -17,4 +17,13 @@ class UserWeatherLocation(
   val user: AuthUser
 ) {
 
+  companion object {
+    fun from(location: String, user: AuthUser): UserWeatherLocation {
+      return UserWeatherLocation(
+        location = location,
+        user = user
+      )
+    }
+  }
+
 }

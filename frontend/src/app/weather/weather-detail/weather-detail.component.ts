@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
-import {MatFormField, MatPrefix} from "@angular/material/form-field";
+import {MatFormField, MatPrefix, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
 import {MatCard, MatCardContent, MatCardSubtitle, MatCardTitle} from "@angular/material/card";
@@ -9,7 +9,7 @@ import {NgIf} from "@angular/common";
 import {FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule} from "@angular/forms";
 import {WeatherService} from "../service/weather.service";
 import {CurrentWeatherDetail} from "../model/CurrentWeatherDetail";
-import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../shared/notification/service/notification.service";
 import {WeatherGraphComponent} from "../weather-graph/weather-graph.component";
 import {Subscription} from "rxjs";
 import {AuthService} from "../../auth/service/auth.service";
@@ -32,7 +32,8 @@ import moment from "moment";
     MatCardContent,
     MatCardTitle,
     WeatherGraphComponent,
-    MatCardSubtitle
+    MatCardSubtitle,
+    MatSuffix
   ],
   providers: [
     {
@@ -47,13 +48,13 @@ import moment from "moment";
 export class WeatherDetailComponent implements OnInit, OnDestroy {
   @ViewChild(WeatherGraphComponent) weatherGraphComponent!: WeatherGraphComponent;
   protected cityFormControl = new FormControl();
-  protected currentSignal: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
+  protected currentWeather: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
   protected isUserSignedIn: WritableSignal<boolean> = signal(false)
   protected readonly moment = moment;
   private subscriptions: Subscription[] = [];
 
   constructor(private weatherService: WeatherService,
-              private notificationService: FrontendNotificationService,
+              private notificationService: NotificationService,
               private authService: AuthService) {
   }
 
@@ -72,10 +73,21 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
     }
   }
 
+  protected saveLocation() {
+    this.subscriptions.push(this.weatherService.saveUserLocation(this.cityFormControl.value).subscribe({
+      next: () => {
+        this.notificationService.successNotification('Město uloženo')
+      },
+      error: () => {
+        this.notificationService.errorNotification('Město nelze uložit')
+      }
+    }))
+  }
+
   private getCurrentWeather() {
     this.subscriptions.push(this.weatherService.getCurrentWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
-        this.currentSignal.set(response)
+        this.currentWeather.set(response)
       },
       error: () => {
         this.notificationService.errorNotification('Město nenalezeno')

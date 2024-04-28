@@ -5,9 +5,7 @@ import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {AuthService} from "../../app/auth/service/auth.service";
 import {FormBuilder} from "@angular/forms";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {
-  FrontendNotificationService
-} from "../../app/shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../app/shared/notification/service/notification.service";
 import {Router} from "@angular/router";
 import {LoginForm} from "../../app/auth/model/LoginForm";
 import {of, throwError} from "rxjs";
@@ -16,7 +14,7 @@ import {RegistrationForm} from "../../app/auth/model/RegistrationForm";
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
   let fixture: ComponentFixture<RegisterComponent>;
-  let notificationService: FrontendNotificationService;
+  let notificationService: NotificationService;
   let authService: AuthService
   let router: Router;
   let formBuilder: FormBuilder;
@@ -30,7 +28,7 @@ describe('RegisterComponent', () => {
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegisterComponent);
-    notificationService = fixture.debugElement.injector.get(FrontendNotificationService)
+    notificationService = fixture.debugElement.injector.get(NotificationService)
     authService = fixture.debugElement.injector.get(AuthService);
     router = fixture.debugElement.injector.get(Router);
     formBuilder = fixture.debugElement.injector.get(FormBuilder)

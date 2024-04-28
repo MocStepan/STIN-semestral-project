@@ -5,14 +5,14 @@ import {Observable, tap} from "rxjs";
 import {HttpHeaders, HttpResponse} from "@angular/common/http";
 import {LoginForm} from "../model/LoginForm";
 import {RegistrationForm} from "../model/RegistrationForm";
-import {FrontendNotificationService} from "../../shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../shared/notification/service/notification.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private httpService = inject(HttpService)
-  private notificationService = inject(FrontendNotificationService)
+  private notificationService = inject(NotificationService)
   private rootHttpUrl = BASE_API_URL + 'auth/'
 
   login(login: LoginForm): Observable<HttpResponse<void>> {

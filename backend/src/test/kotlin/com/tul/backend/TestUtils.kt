@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.tul.backend.auth.base.dto.AccessTokenClaims
+import com.tul.backend.auth.base.dto.AuthJwtClaims
 import com.tul.backend.auth.base.valueobject.AuthUserRole
 import com.tul.backend.auth.base.valueobject.EmailAddress
 import com.tul.backend.auth.entity.AuthUser
@@ -16,10 +18,10 @@ val objectMapper: ObjectMapper = jacksonObjectMapper()
 
 fun createAuthUser(
   id: Long = 0L,
-  username: String = "admin",
-  email: EmailAddress = EmailAddress("admin@admin.cz"),
-  password: String = "admin",
-  role: AuthUserRole = AuthUserRole.ADMIN
+  username: String = "test",
+  email: EmailAddress = EmailAddress("test@test.cz"),
+  password: String = "test",
+  role: AuthUserRole = AuthUserRole.USER
 ): AuthUser {
   return AuthUser(
     id = id,
@@ -29,3 +31,15 @@ fun createAuthUser(
     role = role
   )
 }
+
+fun createAccessTokenClaims(
+  authUserId: Long = 0L,
+  role: AuthUserRole = AuthUserRole.USER,
+  email: String = "test@test.cz"
+) = AccessTokenClaims(
+  authUserId = authUserId,
+  authUserRole = role,
+  email = EmailAddress(email)
+)
+
+fun createUserClaims(): AuthJwtClaims = createAccessTokenClaims()

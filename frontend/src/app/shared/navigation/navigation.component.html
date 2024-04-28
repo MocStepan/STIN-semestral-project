@@ -4,8 +4,8 @@
       <mat-icon>home</mat-icon>
     </li>
   </a>
-  <a *ngIf="isUserSignedIn()">
-    <li class="page-body-text">
+  <a *ngIf="isUserSignedIn()" [routerLink]="'/weather'">
+    <li [class.selected]="isSelected('/weather')" class="page-body-text">
       <span>Oblíbené</span>
     </li>
   </a>

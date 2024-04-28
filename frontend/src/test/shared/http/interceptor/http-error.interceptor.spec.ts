@@ -1,8 +1,6 @@
 import {HttpErrorInterceptor} from "../../../../app/shared/http/interceptor/http-error.interceptor";
 import {AuthService} from "../../../../app/auth/service/auth.service";
-import {
-  FrontendNotificationService
-} from "../../../../app/shared/frontend-notification/service/frontend-notification.service";
+import {NotificationService} from "../../../../app/shared/notification/service/notification.service";
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from "@angular/common/http";
 import {TestBed} from "@angular/core/testing";
 import {Observable} from "rxjs";
@@ -10,7 +8,7 @@ import {Observable} from "rxjs";
 describe('HttpErrorInterceptor', () => {
   let interceptor: HttpErrorInterceptor;
   let authServiceMock: Partial<AuthService>;
-  let notificationServiceMock: Partial<FrontendNotificationService>;
+  let notificationServiceMock: Partial<NotificationService>;
   let httpHandlerMock: HttpHandler;
 
   beforeEach(() => {
@@ -27,7 +25,7 @@ describe('HttpErrorInterceptor', () => {
       providers: [
         HttpErrorInterceptor,
         {provide: AuthService, useValue: authServiceMock},
-        {provide: FrontendNotificationService, useValue: notificationServiceMock}
+        {provide: NotificationService, useValue: notificationServiceMock}
       ]
     });
 
