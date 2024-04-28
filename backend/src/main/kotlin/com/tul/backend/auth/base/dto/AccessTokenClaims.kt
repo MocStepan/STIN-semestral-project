@@ -3,7 +3,6 @@ package com.tul.backend.auth.base.dto
 import com.tul.backend.auth.base.valueobject.AuthUserRole
 import com.tul.backend.auth.base.valueobject.EmailAddress
 import com.tul.backend.auth.entity.AuthUser
-import org.springframework.security.core.AuthenticatedPrincipal
 
 data class AccessTokenClaims(
   override val authUserId: Long,

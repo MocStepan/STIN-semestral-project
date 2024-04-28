@@ -10,7 +10,7 @@ data class RegisterDTO(
 ) {
   fun isValid(): Boolean =
     username.isNotBlank() &&
-      password.isNotBlank() &&
-      email.isValid() &&
-      password == passwordConfirmation
+        password.isNotBlank() &&
+        email.isValid() &&
+        password == passwordConfirmation
 }
