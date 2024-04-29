@@ -87,7 +87,7 @@ export class WeatherListComponent implements OnInit, OnDestroy {
         this.currentWeather.set(response)
       },
       error: () => {
-        this.notificationService.errorNotification('Město nenalezeno')
+        this.notificationService.errorNotification('City not found')
       }
     }))
   }
@@ -98,7 +98,7 @@ export class WeatherListComponent implements OnInit, OnDestroy {
         this.weatherGraphComponent.createChart(response)
       },
       error: () => {
-        this.notificationService.errorNotification('Město nenalezeno')
+        this.notificationService.errorNotification('City not found')
       }
     }))
   }

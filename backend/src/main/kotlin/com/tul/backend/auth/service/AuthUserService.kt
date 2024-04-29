@@ -1,7 +1,7 @@
 package com.tul.backend.auth.service
 
-import com.tul.backend.auth.dto.LoginDTO
-import com.tul.backend.auth.dto.RegisterDTO
+import com.tul.backend.auth.dto.SignInDTO
+import com.tul.backend.auth.dto.SignUpDTO
 import com.tul.backend.auth.repository.AuthUserRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletResponse
@@ -16,35 +16,35 @@ class AuthUserService(
   private val authenticationHandler: AuthenticationHandler,
   private val authUserRepository: AuthUserRepository
 ) {
-  fun login(loginDTO: LoginDTO, response: HttpServletResponse): Boolean {
-    if (!loginDTO.isValid()) {
-      log.warn { "LoginDTO: $loginDTO is invalid" }
+  fun signIn(signInDTO: SignInDTO, response: HttpServletResponse): Boolean {
+    if (!signInDTO.isValid()) {
+      log.warn { "SignInDTO: $signInDTO is invalid" }
       return false
     }
 
-    val authUser = authUserRepository.findByEmail(loginDTO.email.value)
+    val authUser = authUserRepository.findByEmail(signInDTO.email.value)
     if (authUser == null) {
-      log.warn { "User with email: ${loginDTO.email} does not exist" }
+      log.warn { "User with email: ${signInDTO.email} does not exist" }
       return false
     }
 
-    return authenticationHandler.authenticate(loginDTO, authUser, response)
+    return authenticationHandler.authenticate(signInDTO, authUser, response)
   }
 
-  fun register(registerDTO: RegisterDTO): Boolean {
-    if (!registerDTO.isValid()) {
-      log.warn { "RegisterDTO: $registerDTO is invalid" }
+  fun signUp(signUpDTO: SignUpDTO): Boolean {
+    if (!signUpDTO.isValid()) {
+      log.warn { "SignUpDTO: $signUpDTO is invalid" }
       return false
     }
 
-    val exists = authUserRepository.existsByEmail(registerDTO.email.value)
+    val exists = authUserRepository.existsByEmail(signUpDTO.email.value)
     if (exists) {
-      log.warn { "User with email: ${registerDTO.email} already exists" }
+      log.warn { "User with email: ${signUpDTO.email} already exists" }
       return false
     }
 
     authUserRepository.save(
-      authenticationHandler.hashRegistrationPassword(registerDTO)
+      authenticationHandler.hashSignUpPassword(signUpDTO)
     )
     return true
   }

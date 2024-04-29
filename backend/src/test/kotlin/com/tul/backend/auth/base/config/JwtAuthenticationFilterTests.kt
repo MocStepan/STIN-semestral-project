@@ -18,7 +18,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
 
   feature("doFilterInternal") {
 
-    scenario("login successfull") {
+    scenario("sign in successfull") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()
@@ -34,7 +34,7 @@ class JwtAuthenticationFilterTests : FeatureSpec({
       verify { filterChain.doFilter(request, response) }
     }
 
-    scenario("login failed") {
+    scenario("sign in failed") {
       val spec = getSpec()
       val request = mockk<HttpServletRequest>()
       val response = mockk<HttpServletResponse>()

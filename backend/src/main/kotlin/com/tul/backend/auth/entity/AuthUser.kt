@@ -3,7 +3,7 @@ package com.tul.backend.auth.entity
 import com.tul.backend.auth.base.valueobject.AuthUserRole
 import com.tul.backend.auth.base.valueobject.AuthUserRole.USER
 import com.tul.backend.auth.base.valueobject.EmailAddress
-import com.tul.backend.auth.dto.RegisterDTO
+import com.tul.backend.auth.dto.SignUpDTO
 import com.tul.backend.weather.entity.UserWeatherLocation
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -27,11 +27,11 @@ class AuthUser(
   val locations: List<UserWeatherLocation> = mutableListOf()
 ) {
   companion object {
-    fun from(registerDTO: RegisterDTO): AuthUser {
+    fun from(signUpDTO: SignUpDTO): AuthUser {
       return AuthUser(
-        username = registerDTO.username,
-        email = registerDTO.email,
-        password = registerDTO.password
+        username = signUpDTO.username,
+        email = signUpDTO.email,
+        password = signUpDTO.password
       )
     }
   }

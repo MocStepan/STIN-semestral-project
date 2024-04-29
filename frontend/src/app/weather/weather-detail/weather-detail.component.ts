@@ -76,10 +76,10 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
   protected saveLocation() {
     this.subscriptions.push(this.weatherService.saveUserLocation(this.cityFormControl.value).subscribe({
       next: () => {
-        this.notificationService.successNotification('Město uloženo')
+        this.notificationService.successNotification('City saved')
       },
       error: () => {
-        this.notificationService.errorNotification('Město nelze uložit')
+        this.notificationService.errorNotification('The city cannot be saved')
       }
     }))
   }
@@ -90,7 +90,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
         this.currentWeather.set(response)
       },
       error: () => {
-        this.notificationService.errorNotification('Město nenalezeno')
+        this.notificationService.errorNotification('City not found')
       }
     }))
   }
@@ -101,7 +101,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
         this.weatherGraphComponent.createChart(response)
       },
       error: () => {
-        this.notificationService.errorNotification('Město nenalezeno')
+        this.notificationService.errorNotification('City not found')
       }
     }))
   }

@@ -3,8 +3,8 @@ package com.tul.backend.auth.service
 import com.tul.backend.auth.base.dto.AccessTokenClaims
 import com.tul.backend.auth.base.service.AccessTokenService
 import com.tul.backend.auth.base.service.CustomPasswordEncoder
-import com.tul.backend.auth.dto.LoginDTO
-import com.tul.backend.auth.dto.RegisterDTO
+import com.tul.backend.auth.dto.SignInDTO
+import com.tul.backend.auth.dto.SignUpDTO
 import com.tul.backend.createAuthUser
 import io.kotest.core.spec.style.FeatureSpec
 import io.kotest.matchers.shouldBe
@@ -23,19 +23,19 @@ class AuthenticationHandlerTests : FeatureSpec({
       val spec = getSpec()
       val authUser = createAuthUser()
       val claims = AccessTokenClaims(authUser)
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         authUser.email,
         authUser.password
       )
       val cookie = ResponseCookie.from("access_token", "token").build()
       val response = mockk<HttpServletResponse>()
 
-      every { spec.customPasswordEncoder.matches(loginDTO.password, authUser.password) } returns true
+      every { spec.customPasswordEncoder.matches(signInDTO.password, authUser.password) } returns true
       every { spec.accessTokenService.createClaims(authUser) } returns claims
       every { spec.accessTokenService.createCookie(claims) } returns cookie
       every { response.addHeader("Set-Cookie", cookie.toString()) } just runs
 
-      val result = spec.authenticationHandler.authenticate(loginDTO, authUser, response)
+      val result = spec.authenticationHandler.authenticate(signInDTO, authUser, response)
 
       result shouldBe true
     }
@@ -44,7 +44,7 @@ class AuthenticationHandlerTests : FeatureSpec({
       val spec = getSpec()
       val authUser = createAuthUser()
       val claims = AccessTokenClaims(authUser)
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         authUser.email,
         authUser.password
       )
@@ -52,9 +52,9 @@ class AuthenticationHandlerTests : FeatureSpec({
       val response = mockk<HttpServletResponse>()
 
 
-      every { spec.customPasswordEncoder.matches(loginDTO.password, authUser.password) } returns false
+      every { spec.customPasswordEncoder.matches(signInDTO.password, authUser.password) } returns false
 
-      val result = spec.authenticationHandler.authenticate(loginDTO, authUser, response)
+      val result = spec.authenticationHandler.authenticate(signInDTO, authUser, response)
 
       result shouldBe false
       verify(exactly = 0) { spec.accessTokenService.createClaims(authUser) }
@@ -63,20 +63,20 @@ class AuthenticationHandlerTests : FeatureSpec({
     }
   }
 
-  feature("hashRegistrationPassword") {
-    scenario("hash registration password") {
+  feature("hashSignUpPassword") {
+    scenario("hash signUpDTO password") {
       val spec = getSpec()
       val auth = createAuthUser()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         auth.username,
         auth.email,
         auth.password,
         auth.password
       )
 
-      every { spec.customPasswordEncoder.encode(registerDTO.password) } returns "hashedPassword"
+      every { spec.customPasswordEncoder.encode(signUpDTO.password) } returns "hashedPassword"
 
-      val result = spec.authenticationHandler.hashRegistrationPassword(registerDTO)
+      val result = spec.authenticationHandler.hashSignUpPassword(signUpDTO)
 
       result.password shouldBe "hashedPassword"
     }

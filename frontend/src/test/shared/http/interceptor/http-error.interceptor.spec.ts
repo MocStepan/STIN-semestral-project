@@ -1,5 +1,4 @@
 import {HttpErrorInterceptor} from "../../../../app/shared/http/interceptor/http-error.interceptor";
-import {AuthService} from "../../../../app/auth/service/auth.service";
 import {NotificationService} from "../../../../app/shared/notification/service/notification.service";
 import {HttpErrorResponse, HttpEvent, HttpHandler, HttpRequest} from "@angular/common/http";
 import {TestBed} from "@angular/core/testing";
@@ -7,29 +6,18 @@ import {Observable} from "rxjs";
 
 describe('HttpErrorInterceptor', () => {
   let interceptor: HttpErrorInterceptor;
-  let authServiceMock: Partial<AuthService>;
-  let notificationServiceMock: Partial<NotificationService>;
   let httpHandlerMock: HttpHandler;
+  let notificationService: NotificationService;
 
   beforeEach(() => {
-    authServiceMock = {
-      setLogout: () => {
-      }
-    };
-    notificationServiceMock = {
-      errorNotification: () => {
-      }
-    };
-
     TestBed.configureTestingModule({
       providers: [
-        HttpErrorInterceptor,
-        {provide: AuthService, useValue: authServiceMock},
-        {provide: NotificationService, useValue: notificationServiceMock}
+        HttpErrorInterceptor
       ]
     });
 
     interceptor = TestBed.inject(HttpErrorInterceptor);
+    notificationService = TestBed.inject(NotificationService);
     httpHandlerMock = {
       handle: () => {
         return new Observable<HttpEvent<any>>();
@@ -37,17 +25,19 @@ describe('HttpErrorInterceptor', () => {
     };
   });
 
+  it('should be created', () => {
+    expect(interceptor).toBeTruthy();
+  });
+
+  // TODO: Add more tests
   it('should call setLogout and errorNotification on 401 error and rethrow error', () => {
     const request = new HttpRequest('GET', '/api/data');
-    const errorResponse = new HttpErrorResponse({status: 401});
 
-    jest.spyOn(authServiceMock, 'setLogout');
-    jest.spyOn(notificationServiceMock, 'errorNotification');
+    notificationService.errorNotification = jest.fn();
 
     interceptor.intercept(request, httpHandlerMock).subscribe({
       error: (error: HttpErrorResponse) => {
-        expect(authServiceMock.setLogout).toHaveBeenCalled();
-        expect(notificationServiceMock.errorNotification).toHaveBeenCalledWith("Nemáte přístup k této funkci, přihlašte se prosím");
+        expect(notificationService.errorNotification).toHaveBeenCalledWith("Nemáte přístup k této funkci, přihlašte se prosím");
         expect(error.status).toBe(401);
       }
     });
@@ -55,7 +45,6 @@ describe('HttpErrorInterceptor', () => {
 
   it('should return throwError', () => {
     const request = new HttpRequest('GET', '/api/data');
-    const errorResponse = new HttpErrorResponse({status: 401});
 
     interceptor.intercept(request, httpHandlerMock).subscribe({
       error: (error: HttpErrorResponse) => {

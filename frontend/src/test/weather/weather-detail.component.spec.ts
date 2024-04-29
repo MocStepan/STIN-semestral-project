@@ -46,24 +46,20 @@ describe('WeatherDetailComponent', () => {
 
   describe("ngOnInit", () => {
     it("authUser is signed in", () => {
-      const signedSpy = jest.spyOn(authService, 'isSignedIn').mockReturnValue(true);
+      authService.isSignedIn = jest.fn().mockReturnValue(true);
 
-      fixture.ngZone?.run(() => {
-        component.ngOnInit();
-      });
+      component.ngOnInit();
 
-      expect(signedSpy).toHaveBeenCalled();
+      expect(authService.isSignedIn).toHaveBeenCalled();
       expect(component['isUserSignedIn']()).toEqual(true);
     })
 
     it('authUser is not signed in', () => {
-      const signedSpy = jest.spyOn(authService, 'isSignedIn').mockReturnValue(false);
+      authService.isSignedIn = jest.fn().mockReturnValue(false);
 
-      fixture.ngZone?.run(() => {
-        component.ngOnInit();
-      });
+      component.ngOnInit();
 
-      expect(signedSpy).toHaveBeenCalled();
+      expect(authService.isSignedIn).toHaveBeenCalled();
       expect(component['isUserSignedIn']()).toEqual(false);
     });
   });
@@ -74,9 +70,7 @@ describe('WeatherDetailComponent', () => {
       component['getCurrentWeather'] = jest.fn();
       component['getForecastWeather'] = jest.fn();
 
-      fixture.ngZone?.run(() => {
-        component['getWeather']();
-      });
+      component['getWeather']();
 
       expect(component['getCurrentWeather']).toHaveBeenCalled()
       expect(component['getForecastWeather']).toHaveBeenCalled()
@@ -86,9 +80,7 @@ describe('WeatherDetailComponent', () => {
       component['isUserSignedIn'].set(true);
       component['getCurrentWeather'] = jest.fn();
 
-      fixture.ngZone?.run(() => {
-        component['getWeather']();
-      });
+      component['getWeather']();
 
       expect(component['getCurrentWeather']).toHaveBeenCalled()
     });
@@ -96,7 +88,7 @@ describe('WeatherDetailComponent', () => {
 
   describe("getCurrentWeather", () => {
     it("should get current weather", () => {
-      component['cityFormControl'].setValue("Prague");
+      component['cityFormControl'].setValue("Test");
       const response = new CurrentWeatherDetail(
         new Date(),
         20,
@@ -107,36 +99,31 @@ describe('WeatherDetailComponent', () => {
 
       weatherService.getCurrentWeather = jest.fn().mockReturnValue(of(response));
 
-      fixture.ngZone?.run(() => {
-        component['getCurrentWeather']();
-      })
+      component['getCurrentWeather']();
 
-      expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Prague");
+      expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Test");
       expect(component['currentWeather']()).toEqual(response);
     });
 
     it("should show error notification when city is not found", () => {
       const defaultWeather = CurrentWeatherDetail.createDefault();
       component['currentWeather'].set(defaultWeather);
-      component['cityFormControl'].setValue("Prague");
-      const error = {status: 500}
+      component['cityFormControl'].setValue("Test");
 
-      const weatherSpy = weatherService.getCurrentWeather = jest.fn().mockReturnValue(throwError(() => error));
-      const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
+      weatherService.getCurrentWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      notificationService.errorNotification = jest.fn();
 
-      fixture.ngZone?.run(() => {
-        component['getCurrentWeather']();
-      })
+      component['getCurrentWeather']();
 
-      expect(weatherSpy).toHaveBeenCalledWith("Prague");
+      expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("Test");
       expect(component['currentWeather']()).toEqual(defaultWeather);
-      expect(notificationSpy).toHaveBeenCalledWith('Město nenalezeno');
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   });
 
   describe("getForecastWeather", () => {
     it("should get forecast weather", () => {
-      component['cityFormControl'].setValue("Prague");
+      component['cityFormControl'].setValue("Test");
       const response = new ForecastWeatherDetail(
         [new Date()],
         [20],
@@ -146,27 +133,22 @@ describe('WeatherDetailComponent', () => {
 
       weatherService.getForecastWeather = jest.fn().mockReturnValue(of(response));
 
-      fixture.ngZone?.run(() => {
-        component['getForecastWeather']();
-      })
+      component['getForecastWeather']();
 
-      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Prague");
+      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Test");
     });
 
     it("should show error notification when city is not found", () => {
-      const defaultWeather = ForecastWeatherDetail.createDefault();
-      component['cityFormControl'].setValue("Prague");
-      const error = {status: 500}
+      component['cityFormControl'].setValue("Test");
 
-      const weatherSpy = weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => error));
-      const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
+      weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      notificationService.errorNotification = jest.fn();
 
-      fixture.ngZone?.run(() => {
-        component['getForecastWeather']();
-      })
 
-      expect(weatherSpy).toHaveBeenCalledWith("Prague");
-      expect(notificationSpy).toHaveBeenCalledWith('Město nenalezeno');
+      component['getForecastWeather']();
+
+      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Test");
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   })
 });

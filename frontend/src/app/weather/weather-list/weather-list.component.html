@@ -9,24 +9,24 @@
           </ng-container>
 
           <ng-container matColumnDef="location">
-            <th *matHeaderCellDef mat-header-cell> Lokace</th>
+            <th *matHeaderCellDef mat-header-cell> Location </th>
             <td *matCellDef="let element" mat-cell><strong> {{ element.location }} </strong></td>
           </ng-container>
 
           <ng-container matColumnDef="current">
-            <th *matHeaderCellDef mat-header-cell>Aktuální počasí</th>
+            <th *matHeaderCellDef mat-header-cell> Current weather</th>
             <td *matCellDef="let element" mat-cell>
               <button (click)="showCurrentWeather(element.location)" color="primary" mat-raised-button>
-                Zobrazit
+                Show
               </button>
             </td>
           </ng-container>
 
           <ng-container matColumnDef="forecast">
-            <th *matHeaderCellDef mat-header-cell>Předpověď</th>
+            <th *matHeaderCellDef mat-header-cell> Forecast</th>
             <td *matCellDef="let element" mat-cell>
               <button (click)="showForecastWeather(element.location)" color="primary" mat-raised-button>
-                Zobrazit
+                Show
               </button>
             </td>
           </ng-container>
@@ -38,23 +38,23 @@
 
       <ng-container>
         <mat-card class="col">
-          <mat-card-title>Aktuální počasí</mat-card-title>
+          <mat-card-title>Current weather</mat-card-title>
           <mat-card-subtitle>
             <mat-icon *ngIf="currentWeather().isDay">brightness_5</mat-icon>
             <mat-icon *ngIf="!currentWeather().isDay">brightness_1</mat-icon>
           </mat-card-subtitle>
           <mat-card-content>
             <div *ngIf="currentWeather()">
-              <p>Datum: {{ moment(currentWeather().time).format("DD-MM-YYYY") }}</p>
-              <p>Čas: {{ moment(currentWeather().time).format("HH:MM") }}</p>
-              <p>Teplota: {{ currentWeather().temperature }} °C</p>
-              <p>Oblačnost: {{ currentWeather().cloudCover }} %</p>
-              <p>Rychlost větru: {{ currentWeather().temperature }} km/h</p>
+              <p>Date: {{ moment(currentWeather().time).format("DD-MM-YYYY") }}</p>
+              <p>Time: {{ moment(currentWeather().time).format("HH:MM") }}</p>
+              <p>Temperature: {{ currentWeather().temperature }} °C</p>
+              <p>Cloud cover: {{ currentWeather().cloudCover }} %</p>
+              <p>Wind speed: {{ currentWeather().temperature }} km/h</p>
             </div>
           </mat-card-content>
         </mat-card>
         <mat-card class="col">
-          <mat-card-title>Graf předpovědi počasí</mat-card-title>
+          <mat-card-title>Graph of forecast weather</mat-card-title>
           <mat-card-subtitle>
             <mat-icon *ngIf="currentWeather().isDay">brightness_5</mat-icon>
             <mat-icon *ngIf="!currentWeather().isDay">brightness_1</mat-icon>
@@ -66,5 +66,4 @@
       </ng-container>
     </div>
   </div>
-  p
 </div>

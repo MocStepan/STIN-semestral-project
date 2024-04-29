@@ -10,11 +10,11 @@ import {MatToolbar} from "@angular/material/toolbar";
 import {NgIf} from "@angular/common";
 import {NotificationService} from "../../shared/notification/service/notification.service";
 import {Router} from "@angular/router";
-import {RegistrationForm} from "../model/RegistrationForm";
+import {SignUpForm} from "../model/SignUpForm";
 import {Subscription} from "rxjs";
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-sign.up',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -28,17 +28,17 @@ import {Subscription} from "rxjs";
     ReactiveFormsModule,
     MatPrefix
   ],
-  templateUrl: './register.component.html',
+  templateUrl: './sign-up.component.html',
   styleUrl: '../style/auth.component.css',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       multi: true,
-      useExisting: RegisterComponent
+      useExisting: SignUpComponent
     }
   ]
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class SignUpComponent implements OnInit, OnDestroy {
   protected formGroup!: FormGroup
   private subscriptions: Subscription[] = [];
 
@@ -58,26 +58,26 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     if (this.formGroup.valid) {
-      this.subscriptions.push(this.authService.register(this.formGroup.value).subscribe({
+      this.subscriptions.push(this.authService.signUp(this.formGroup.value).subscribe({
         next: () => {
-          this.notificationService.successNotification("Registrace proběhla úspěšně")
-          this.router.navigate(['/login'])
+          this.notificationService.successNotification("Registration was successful")
+          this.router.navigate(['/signIn'])
         },
         error: () => {
-          this.notificationService.errorNotification("Registrace se nezdařila")
+          this.notificationService.errorNotification("Registration failed")
         }
       }))
     } else {
-      this.notificationService.errorNotification("Formulář obsahuje nevalidní informace")
+      this.notificationService.errorNotification("The form contains invalid information")
     }
   }
 
-  openLoginForm() {
-    this.router.navigate(['/login'])
+  openSignInForm() {
+    this.router.navigate(['/signIn'])
   }
 
   private buildFormGroup() {
-    const form: RegistrationForm = {
+    const form: SignUpForm = {
       username: [null, [Validators.required]],
       email: [null, [Validators.email, Validators.required]],
       password: [null, [Validators.required]],

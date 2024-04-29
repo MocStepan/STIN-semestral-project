@@ -31,6 +31,7 @@ export class WeatherService {
     return this.httpService.get(this.rootUrl + 'locations')
   }
 
+  // TODO: Fix the return type
   deleteUserWeatherLocation(id: number): Observable<any> {
     return this.httpService.delete(this.rootUrl + 'location/' + id)
   }

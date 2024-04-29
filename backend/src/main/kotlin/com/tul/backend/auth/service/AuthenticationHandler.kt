@@ -2,8 +2,8 @@ package com.tul.backend.auth.service
 
 import com.tul.backend.auth.base.service.AccessTokenService
 import com.tul.backend.auth.base.service.CustomPasswordEncoder
-import com.tul.backend.auth.dto.LoginDTO
-import com.tul.backend.auth.dto.RegisterDTO
+import com.tul.backend.auth.dto.SignInDTO
+import com.tul.backend.auth.dto.SignUpDTO
 import com.tul.backend.auth.entity.AuthUser
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
@@ -17,11 +17,11 @@ class AuthenticationHandler(
   private val customPasswordEncoder: CustomPasswordEncoder
 ) {
   fun authenticate(
-    loginDTO: LoginDTO,
+    signInDTO: SignInDTO,
     authUser: AuthUser,
     response: HttpServletResponse
   ): Boolean {
-    return if (customPasswordEncoder.matches(loginDTO.password, authUser.password)) {
+    return if (customPasswordEncoder.matches(signInDTO.password, authUser.password)) {
       val claims = accessTokenService.createClaims(authUser)
       val cookie = accessTokenService.createCookie(claims)
       response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
@@ -31,8 +31,8 @@ class AuthenticationHandler(
     }
   }
 
-  fun hashRegistrationPassword(registerDTO: RegisterDTO): AuthUser {
-    val authUser = AuthUser.from(registerDTO)
+  fun hashSignUpPassword(signUpDTO: SignUpDTO): AuthUser {
+    val authUser = AuthUser.from(signUpDTO)
     authUser.password = customPasswordEncoder.encode(authUser.password)
     return authUser
   }
