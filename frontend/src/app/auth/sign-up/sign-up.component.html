@@ -3,7 +3,7 @@
       [formGroup]="formGroup">
   <div class="auth-container">
     <div class="auth-content">
-      <mat-toolbar class="auth-toolbar" color="primary">Login</mat-toolbar>
+      <mat-toolbar class="auth-toolbar" color="primary">Sign in</mat-toolbar>
       <mat-card>
 
         <mat-form-field>
@@ -25,9 +25,9 @@
           <input [formControlName]="'passwordConfirmation'" matInput placeholder="PasswordConfirmation" type="password">
         </mat-form-field>
 
-        <button color="primary" mat-raised-button type="submit">Registrovat se</button>
+        <button color="primary" mat-raised-button type="submit">Sign up</button>
         <br>
-        <button (click)="openLoginForm()" color="basic" mat-raised-button type="button">Přihlásit se</button>
+        <button (click)="openSignInForm()" color="basic" mat-raised-button type="button">Sign in</button>
         <br>
       </mat-card>
     </div>

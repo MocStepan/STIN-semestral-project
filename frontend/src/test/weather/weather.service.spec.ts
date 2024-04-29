@@ -19,7 +19,7 @@ describe('WeatherService', () => {
     httpService = TestBed.inject(HttpService)
   });
 
-  it('get current weather', () => {
+  it('getCurrentWeather', () => {
     const currentWeather = CurrentWeatherDetail.createDefault()
     httpService.get = jest.fn().mockReturnValue(currentWeather);
 
@@ -28,12 +28,36 @@ describe('WeatherService', () => {
     expect(httpService.get).toHaveBeenCalled()
   });
 
-  it('get forecast weather', () => {
+  it('getForecastWeather', () => {
     const forecastWeather = ForecastWeatherDetail.createDefault()
     httpService.get = jest.fn().mockReturnValue(forecastWeather);
 
     weatherService.getForecastWeather("Test");
 
     expect(httpService.get).toHaveBeenCalled()
+  });
+
+  it('saveUserLocation', () => {
+    httpService.post = jest.fn().mockReturnValue(true);
+
+    weatherService.saveUserLocation("Test");
+
+    expect(httpService.post).toHaveBeenCalled()
+  });
+
+  it('getUserWeatherLocations', () => {
+    httpService.get = jest.fn().mockReturnValue([]);
+
+    weatherService.getUserWeatherLocations();
+
+    expect(httpService.get).toHaveBeenCalled()
+  });
+
+  it('deleteUserWeatherLocation', () => {
+    httpService.delete = jest.fn().mockReturnValue(true);
+
+    weatherService.deleteUserWeatherLocation(1);
+
+    expect(httpService.delete).toHaveBeenCalled()
   });
 });

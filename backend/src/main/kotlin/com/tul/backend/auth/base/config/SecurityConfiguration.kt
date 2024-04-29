@@ -16,8 +16,6 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import org.springframework.security.web.authentication.logout.LogoutHandler
-import org.springframework.security.web.authentication.logout.LogoutSuccessHandler
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 
@@ -27,15 +25,13 @@ import org.springframework.web.cors.CorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfiguration(
   private val objectMapper: ObjectMapper,
-  private val logoutSuccessHandler: LogoutSuccessHandler,
-  private val cookieClearingLogoutHandler: LogoutHandler,
   private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
 
   private val userUnsecuredEndpoints =
     arrayOf(
-      "/api/v1/auth/login",
-      "/api/v1/auth/register",
+      "/api/v1/auth/signIn",
+      "/api/v1/auth/signUp",
       "/api/v1/weather/current/*",
     )
 
@@ -63,13 +59,6 @@ class SecurityConfiguration(
       .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
       .exceptionHandling {
         it.authenticationEntryPoint(authenticationExceptionHandler)
-      }
-      .logout {
-        it.logoutUrl("/api/auth/logout")
-          .addLogoutHandler(cookieClearingLogoutHandler)
-          .logoutSuccessHandler(logoutSuccessHandler)
-          .deleteCookies("access_token")
-          .permitAll()
       }
       .build()
 

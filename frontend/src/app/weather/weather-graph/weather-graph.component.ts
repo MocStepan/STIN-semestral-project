@@ -29,19 +29,19 @@ export class WeatherGraphComponent implements OnInit {
         labels: data.time.map(time => moment(time).format("DD/MM")),
         datasets: [
           {
-            label: "Min teplota (°C)",
+            label: "Min temp (°C)",
             data: data.minTemperature,
             backgroundColor: 'blue',
             borderColor: 'grey'
           },
           {
-            label: "Max teplota (°C)",
+            label: "Max temp (°C)",
             data: data.maxTemperature,
             backgroundColor: 'red',
             borderColor: 'grey'
           },
           {
-            label: "Max rychlsot větru (m/s)",
+            label: "Max wind speed (m/s)",
             data: data.maxWindSpeed,
             backgroundColor: 'black',
             borderColor: 'grey'

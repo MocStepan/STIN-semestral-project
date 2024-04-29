@@ -6,18 +6,18 @@
   </a>
   <a *ngIf="isUserSignedIn()" [routerLink]="'/weather'">
     <li [class.selected]="isSelected('/weather')" class="page-body-text">
-      <span>Oblíbené</span>
+      <span>Favorite</span>
     </li>
   </a>
   <span class="fill-space"></span>
-  <a *ngIf="!isUserSignedIn()" [routerLink]="'/login'">
-    <li [class.selected]="isSelected('/login')" class="page-body-text">
-      <span>Přihlásit se</span>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/signIn'">
+    <li [class.selected]="isSelected('/signIn')" class="page-body-text">
+      <span>Sign in</span>
     </li>
   </a>
-  <a *ngIf="!isUserSignedIn()" [routerLink]="'/registration'">
-    <li [class.selected]="isSelected('/registration')" class="page-body-text">
-      <span>Registrovat se</span>
+  <a *ngIf="!isUserSignedIn()" [routerLink]="'/signUp'">
+    <li [class.selected]="isSelected('/signUp')" class="page-body-text">
+      <span>Sign up</span>
     </li>
   </a>
 </mat-toolbar>

@@ -1,8 +1,8 @@
 package com.tul.backend.auth.service
 
 import com.tul.backend.auth.base.valueobject.EmailAddress
-import com.tul.backend.auth.dto.LoginDTO
-import com.tul.backend.auth.dto.RegisterDTO
+import com.tul.backend.auth.dto.SignInDTO
+import com.tul.backend.auth.dto.SignUpDTO
 import com.tul.backend.auth.entity.AuthUser
 import com.tul.backend.auth.repository.AuthUserRepository
 import com.tul.backend.createAuthUser
@@ -16,48 +16,48 @@ import jakarta.servlet.http.HttpServletResponse
 
 class AuthUserServiceTests : FeatureSpec({
 
-  feature("login") {
-    scenario("login with valid credentials") {
+  feature("signIn") {
+    scenario("sign in with valid credentials") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
       val authUser = createAuthUser()
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         authUser.email,
         authUser.password
       )
 
-      every { spec.authenticationHandler.authenticate(loginDTO, authUser, response) } returns true
+      every { spec.authenticationHandler.authenticate(signInDTO, authUser, response) } returns true
       every { spec.authUserRepository.findByEmail(authUser.email.value) } returns authUser
 
-      val result = spec.authUserService.login(loginDTO, response)
+      val result = spec.authUserService.signIn(signInDTO, response)
 
       result shouldBe true
     }
 
-    scenario("login with invalid email") {
+    scenario("sign in with invalid email") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
       val authUser = createAuthUser()
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         EmailAddress("test"),
         authUser.password
       )
 
-      val result = spec.authUserService.login(loginDTO, response)
+      val result = spec.authUserService.signIn(signInDTO, response)
 
       result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
     }
 
-    scenario("login with empty password") {
+    scenario("sign in with empty password") {
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         EmailAddress("test@test.cz"),
         ""
       )
 
-      val result = spec.authUserService.login(loginDTO, response)
+      val result = spec.authUserService.signIn(signInDTO, response)
 
       result shouldBe false
       verify(exactly = 0) { spec.authenticationHandler.authenticate(any(), any(), any()) }
@@ -67,15 +67,15 @@ class AuthUserServiceTests : FeatureSpec({
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
       val authUser = createAuthUser()
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         authUser.email,
         authUser.password
       )
 
       every { spec.authUserRepository.findByEmail(authUser.email.value) } returns authUser
-      every { spec.authenticationHandler.authenticate(loginDTO, authUser, response) } returns false
+      every { spec.authenticationHandler.authenticate(signInDTO, authUser, response) } returns false
 
-      val result = spec.authUserService.login(loginDTO, response)
+      val result = spec.authUserService.signIn(signInDTO, response)
 
       result shouldBe false
     }
@@ -84,129 +84,129 @@ class AuthUserServiceTests : FeatureSpec({
       val spec = getSpec()
       val response = mockk<HttpServletResponse>()
       val authUser = createAuthUser()
-      val loginDTO = LoginDTO(
+      val signInDTO = SignInDTO(
         authUser.email,
         authUser.password
       )
 
       every { spec.authUserRepository.findByEmail(authUser.email.value) } returns null
 
-      val result = spec.authUserService.login(loginDTO, response)
+      val result = spec.authUserService.signIn(signInDTO, response)
 
       result shouldBe false
     }
   }
 
-  feature("register") {
-    scenario("register with valid credentials") {
+  feature("signUp") {
+    scenario("sign up with valid credentials") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "username",
         EmailAddress("test@test.cz"),
         "password",
         "password"
       )
-      val authUser = AuthUser.from(registerDTO)
+      val authUser = AuthUser.from(signUpDTO)
 
       val authUserSlot = slot<AuthUser>()
 
-      every { spec.authUserRepository.existsByEmail(registerDTO.email.value) } returns false
-      every { spec.authenticationHandler.hashRegistrationPassword(registerDTO) } returns authUser
+      every { spec.authUserRepository.existsByEmail(signUpDTO.email.value) } returns false
+      every { spec.authenticationHandler.hashSignUpPassword(signUpDTO) } returns authUser
       every { spec.authUserRepository.save(capture(authUserSlot)) } returnsArgument 0
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       val captured = authUserSlot.captured
       result shouldBe true
-      captured.username shouldBe registerDTO.username
-      captured.email shouldBe registerDTO.email
+      captured.username shouldBe signUpDTO.username
+      captured.email shouldBe signUpDTO.email
       captured.password shouldBe authUser.password
-      registerDTO.passwordConfirmation shouldBe "password"
+      signUpDTO.passwordConfirmation shouldBe "password"
     }
 
-    scenario("register with invalid email") {
+    scenario("sign up with invalid email") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "username",
         EmailAddress("test@"),
         "password",
         "password"
       )
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       result shouldBe false
-      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authenticationHandler.hashSignUpPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
 
-    scenario("register with invalid username") {
+    scenario("sign up with invalid username") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "",
         EmailAddress("test@test.cz"),
         "password",
         "password"
       )
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       result shouldBe false
-      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authenticationHandler.hashSignUpPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
 
-    scenario("register with invalid password") {
+    scenario("sign up with invalid password") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "username",
         EmailAddress("test@test.cz"),
         "",
         ""
       )
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       result shouldBe false
-      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authenticationHandler.hashSignUpPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
 
-    scenario("register with existing email") {
+    scenario("sign up with existing email") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "username",
         EmailAddress("test@test.cz"),
         "password",
         "password"
       )
 
-      every { spec.authUserRepository.existsByEmail(registerDTO.email.value) } returns true
+      every { spec.authUserRepository.existsByEmail(signUpDTO.email.value) } returns true
 
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       result shouldBe false
-      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authenticationHandler.hashSignUpPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
 
-    scenario("register with not same passwords") {
+    scenario("sign up with not same passwords") {
       val spec = getSpec()
-      val registerDTO = RegisterDTO(
+      val signUpDTO = SignUpDTO(
         "username",
         EmailAddress("test@test.cz"),
         "password",
         "password123"
       )
 
-      val result = spec.authUserService.register(registerDTO)
+      val result = spec.authUserService.signUp(signUpDTO)
 
       result shouldBe false
-      verify(exactly = 0) { spec.authenticationHandler.hashRegistrationPassword(any()) }
+      verify(exactly = 0) { spec.authenticationHandler.hashSignUpPassword(any()) }
       verify(exactly = 0) { spec.authUserRepository.existsByEmail(any()) }
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }

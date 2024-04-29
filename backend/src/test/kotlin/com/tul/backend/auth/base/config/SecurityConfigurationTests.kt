@@ -23,15 +23,10 @@ class SecurityConfigurationTests : FeatureSpec({
 
     scenario("securityFilterChain configuration") {
       val objectMapper = ObjectMapper()
-      val jwtConfiguration = JwtConfiguration()
-      val logoutSuccessHandler = jwtConfiguration.logoutSuccessHandler()
-      val cookieClearingLogoutHandler = jwtConfiguration.cookieClearingLogoutHandler()
       val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
         objectMapper,
-        logoutSuccessHandler,
-        cookieClearingLogoutHandler,
         jwtAuthenticationFilter
       )
 
@@ -52,15 +47,10 @@ class SecurityConfigurationTests : FeatureSpec({
 
     scenario("authenticationExceptionHandler function") {
       val objectMapper = ObjectMapper()
-      val jwtConfiguration = JwtConfiguration()
-      val logoutSuccessHandler = jwtConfiguration.logoutSuccessHandler()
-      val cookieClearingLogoutHandler = jwtConfiguration.cookieClearingLogoutHandler()
       val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
         objectMapper,
-        logoutSuccessHandler,
-        cookieClearingLogoutHandler,
         jwtAuthenticationFilter
       )
       val errorDTO = ErrorDTO("Unauthorized")

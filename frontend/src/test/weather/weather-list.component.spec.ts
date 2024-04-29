@@ -83,16 +83,15 @@ describe('WeatherListComponent', () => {
     it("should show error notification when city is not found", () => {
       const defaultWeather = CurrentWeatherDetail.createDefault();
       component['currentWeather'].set(defaultWeather);
-      const error = {status: 500}
 
-      weatherService.getCurrentWeather = jest.fn().mockReturnValue(throwError(() => error));
-      const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
+      weatherService.getCurrentWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      notificationService.errorNotification = jest.fn();
 
       component['showCurrentWeather']('test')
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("test");
       expect(component['currentWeather']()).toEqual(defaultWeather);
-      expect(notificationSpy).toHaveBeenCalledWith('Město nenalezeno');
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   });
 
@@ -113,16 +112,13 @@ describe('WeatherListComponent', () => {
     });
 
     it("should show error notification when city is not found", () => {
-      const defaultWeather = ForecastWeatherDetail.createDefault();
-      const error = {status: 500}
-
-      const weatherSpy = weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => error));
-      const notificationSpy = jest.spyOn(notificationService, 'errorNotification');
+      weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      notificationService.errorNotification = jest.fn();
 
       component['showForecastWeather']('test');
 
-      expect(weatherSpy).toHaveBeenCalledWith("test");
-      expect(notificationSpy).toHaveBeenCalledWith('Město nenalezeno');
+      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("test");
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   })
 });

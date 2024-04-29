@@ -2,8 +2,8 @@ import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
 import {AuthService} from "../../app/auth/service/auth.service";
 import {HttpService} from "../../app/shared/http/service/http.service";
-import {LoginForm} from "../../app/auth/model/LoginForm";
-import {RegistrationForm} from "../../app/auth/model/RegistrationForm";
+import {SignInForm} from "../../app/auth/model/SignInForm";
+import {SignUpForm} from "../../app/auth/model/SignUpForm";
 import {of} from "rxjs";
 
 describe('AuthService', () => {
@@ -20,11 +20,11 @@ describe('AuthService', () => {
     httpService = TestBed.inject(HttpService)
   });
 
-  it('should call httpService.postWithOptions for login', () => {
-    const loginForm: LoginForm = {email: 'test@test.cz', password: 'password'};
+  it('should call httpService.postWithOptions for sign in', () => {
+    const signInForm: SignInForm = {email: 'test@test.cz', password: 'password'};
     httpService.postWithOptions = jest.fn().mockReturnValue(of({}));
 
-    authService.login(loginForm).subscribe(response => {
+    authService.signIn(signInForm).subscribe(response => {
       expect(response.status).toBe(200);
       expect(sessionStorage.getItem('auth')).toBe('true');
     });
@@ -32,16 +32,8 @@ describe('AuthService', () => {
     expect(httpService.postWithOptions).toHaveBeenCalled()
   });
 
-  it('should call httpService.get for logout', () => {
-    httpService.get = jest.fn().mockReturnValue(of({}));
-
-    authService.logout();
-
-    expect(httpService.get).toHaveBeenCalled();
-  });
-
-  it('should call httpService.post for register', () => {
-    const registrationForm: RegistrationForm = {
+  it('should call httpService.post for sign up', () => {
+    const signUpForm: SignUpForm = {
       username: 'test',
       email: 'test@example.com',
       password: 'password',
@@ -49,18 +41,8 @@ describe('AuthService', () => {
     };
     httpService.post = jest.fn().mockReturnValue(of({}));
 
-    authService.register(registrationForm).subscribe();
+    authService.signUp(signUpForm).subscribe();
 
     expect(httpService.post).toHaveBeenCalled();
-  });
-
-  it('should setLogout', () => {
-    const sessionSpy = jest.spyOn(sessionStorage, 'removeItem');
-
-    sessionStorage.setItem('auth', 'test');
-
-    authService.setLogout();
-
-    expect(sessionStorage.getItem('auth')).toBeNull();
   });
 });

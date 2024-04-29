@@ -1,4 +1,4 @@
-export interface RegistrationForm {
+export interface SignUpForm {
   username: unknown
   email: unknown
   password: unknown
