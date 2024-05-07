@@ -36,4 +36,10 @@ class AuthenticationHandler(
     authUser.password = customPasswordEncoder.encode(authUser.password)
     return authUser
   }
+
+  fun signOut(response: HttpServletResponse): Boolean {
+    val cookie = accessTokenService.createEmptyCookie()
+    response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString())
+    return true
+  }
 }

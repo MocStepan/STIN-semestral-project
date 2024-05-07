@@ -68,6 +68,22 @@ class AccessTokenServiceTests : FeatureSpec({
       result shouldBe AccessTokenClaims(authUser)
     }
   }
+
+  feature("createEmptyCookie") {
+    scenario("create empty cookie") {
+      val spec = getSpec()
+
+      val result = spec.accessTokenService.createEmptyCookie()
+
+      result.name shouldBe "access_token"
+      result.value shouldBe ""
+      result.isHttpOnly shouldBe true
+      result.path shouldBe "/"
+      result.isSecure shouldBe true
+      result.sameSite shouldBe "Lax"
+      result.maxAge shouldNotBe null
+    }
+  }
 })
 
 private class AccessTokenServiceSpecWrapper(

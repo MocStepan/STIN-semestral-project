@@ -81,6 +81,21 @@ class AuthenticationHandlerTests : FeatureSpec({
       result.password shouldBe "hashedPassword"
     }
   }
+
+  feature("signOut") {
+    scenario("sign out") {
+      val spec = getSpec()
+      val response = mockk<HttpServletResponse>()
+      val cookie = ResponseCookie.from("access_token", "").build()
+
+      every { spec.accessTokenService.createEmptyCookie() } returns cookie
+      every { response.addHeader("Set-Cookie", cookie.toString()) } just runs
+
+      val result = spec.authenticationHandler.signOut(response)
+
+      result shouldBe true
+    }
+  }
 })
 
 private class AuthenticationHandlerSpecWrapper(

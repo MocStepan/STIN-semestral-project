@@ -36,4 +36,13 @@ class AuthUserController(
     val status = if (response) HttpStatus.OK else HttpStatus.BAD_REQUEST
     return ResponseEntity(response, status)
   }
+
+  @PostMapping("/v1/auth/signOut")
+  fun signOut(
+    response: HttpServletResponse
+  ): ResponseEntity<Boolean> {
+    val responseDTO = authUserService.signOut(response)
+    val status = if (responseDTO) HttpStatus.OK else HttpStatus.NOT_FOUND
+    return ResponseEntity(responseDTO, status)
+  }
 }

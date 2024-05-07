@@ -45,4 +45,17 @@ describe('AuthService', () => {
 
     expect(httpService.post).toHaveBeenCalled();
   });
+
+  it('should return true if user is signed in', () => {
+    sessionStorage.setItem('auth', 'true');
+    expect(authService.isSignedIn()).toBe(true);
+  });
+
+  it('should remove auth from sessionStorage after sign out', () => {
+    httpService.postWithOptions = jest.fn().mockReturnValue(of({}));
+
+    authService.signOut().subscribe(() => {
+      expect(sessionStorage.getItem('auth')).toBeNull();
+    })
+  });
 });

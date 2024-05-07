@@ -211,6 +211,19 @@ class AuthUserServiceTests : FeatureSpec({
       verify(exactly = 0) { spec.authUserRepository.save(any()) }
     }
   }
+
+  feature("signOut") {
+    scenario("sign out") {
+      val spec = getSpec()
+      val response = mockk<HttpServletResponse>()
+
+      every { spec.authenticationHandler.signOut(response) } returns true
+
+      val result = spec.authUserService.signOut(response)
+
+      result shouldBe true
+    }
+  }
 })
 
 private class AuthUserServiceSpecWrapper(
