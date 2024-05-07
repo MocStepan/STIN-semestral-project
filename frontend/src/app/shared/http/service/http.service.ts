@@ -22,7 +22,7 @@ export class HttpService {
     return this.httpClient.put<T>(url, data, options)
   }
 
-  delete(url: string) {
-    return this.httpClient.delete(url, {})
+  delete<T>(url: string) {
+    return this.httpClient.delete<T>(url, {})
   }
 }
