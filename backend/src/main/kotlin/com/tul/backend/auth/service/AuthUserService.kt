@@ -48,4 +48,8 @@ class AuthUserService(
     )
     return true
   }
+
+  fun signOut(response: HttpServletResponse): Boolean {
+    return authenticationHandler.signOut(response)
+  }
 }

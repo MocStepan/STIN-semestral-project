@@ -33,4 +33,10 @@ export class AuthService {
   private setSignedIn() {
     sessionStorage.setItem('auth', `true`)
   }
+
+  signOut() {
+    return this.httpService.postWithOptions<HttpResponse<void>>(this.rootHttpUrl + 'signOut', null, {}).pipe(tap(() => {
+      sessionStorage.removeItem('auth')
+    }))
+  }
 }

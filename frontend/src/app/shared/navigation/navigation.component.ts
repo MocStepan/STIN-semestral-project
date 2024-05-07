@@ -66,4 +66,10 @@ export class NavigationComponent implements OnInit, OnDestroy {
       this.changeDetectorRef.detectChanges()
     }));
   }
+
+  signOut() {
+    this.subscriptions.push(this.authService.signOut().subscribe(() => {
+      window.location.reload();
+    }))
+  }
 }

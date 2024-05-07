@@ -10,6 +10,7 @@ const routes: Routes = [
   {path: 'signIn', component: SignInComponent},
   {path: 'signUp', component: SignUpComponent},
   {path: 'weather', component: WeatherListComponent},
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({

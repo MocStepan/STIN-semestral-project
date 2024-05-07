@@ -82,6 +82,32 @@ class AuthUserControllerTests : FeatureSpec({
       result.body shouldBe false
     }
   }
+
+  feature("signOut") {
+    scenario("sign out") {
+      val spec = getSpec()
+      val response = mockk<HttpServletResponse>()
+
+      every { spec.authUserService.signOut(response) } returns true
+
+      val result = spec.authUserController.signOut(response)
+
+      result.statusCode shouldBe HttpStatus.OK
+      result.body shouldBe true
+    }
+
+    scenario("sign out with invalid credentials") {
+      val spec = getSpec()
+      val response = mockk<HttpServletResponse>()
+
+      every { spec.authUserService.signOut(response) } returns false
+
+      val result = spec.authUserController.signOut(response)
+
+      result.statusCode shouldBe HttpStatus.NOT_FOUND
+      result.body shouldBe false
+    }
+  }
 })
 
 private class AuthUserControllerSpecWrapper(

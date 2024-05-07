@@ -4,13 +4,14 @@ import {NavigationEnd, Router} from "@angular/router";
 import {HttpService} from "../../../app/shared/http/service/http.service";
 import {AuthService} from "../../../app/auth/service/auth.service";
 import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, of} from "rxjs";
 import {RouterTestingModule} from "@angular/router/testing";
 
 describe('NavigationComponent', () => {
   let component: NavigationComponent;
   let fixture: ComponentFixture<NavigationComponent>;
   let router: Router;
+  let authService: AuthService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -25,6 +26,7 @@ describe('NavigationComponent', () => {
     fixture = TestBed.createComponent(NavigationComponent);
     component = fixture.componentInstance;
     router = fixture.debugElement.injector.get(Router);
+    authService = fixture.debugElement.injector.get(AuthService);
     fixture.detectChanges();
   });
 
@@ -60,4 +62,12 @@ describe('NavigationComponent', () => {
     component['currentUrl'] = '/some-url';
     expect(component.isSelected('/other-url')).toBeFalsy();
   });
+
+  it('should set isUserSignedIn to false on signOut', () => {
+    authService.signOut = jest.fn().mockReturnValue(of(null));
+
+    component.signOut()
+
+    expect(authService.signOut).toHaveBeenCalled()
+  })
 });

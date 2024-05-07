@@ -20,4 +20,9 @@
       <span>Sign up</span>
     </li>
   </a>
+  <a *ngIf="isUserSignedIn()">
+    <li class="page-body-text" (click)="signOut()">
+      <span>Sign out</span>
+    </li>
+  </a>
 </mat-toolbar>

@@ -46,4 +46,14 @@ class AccessTokenService(
   fun createClaims(authUser: AuthUser): AccessTokenClaims {
     return AccessTokenClaims(authUser)
   }
+
+  fun createEmptyCookie(): ResponseCookie {
+    return ResponseCookie.from(COOKIE_NAME, "")
+      .httpOnly(true)
+      .path("/")
+      .secure(secure)
+      .sameSite(sameSite)
+      .maxAge(0)
+      .build()
+  }
 }

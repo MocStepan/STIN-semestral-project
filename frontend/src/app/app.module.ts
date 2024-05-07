@@ -12,6 +12,7 @@ import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {NavigationComponent} from "./shared/navigation/navigation.component";
+import {HttpErrorInterceptor} from "./shared/http/interceptor/http-error.interceptor";
 
 @NgModule({
   declarations: [
@@ -36,6 +37,11 @@ import {NavigationComponent} from "./shared/navigation/navigation.component";
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpHeaderInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpErrorInterceptor,
       multi: true
     },
     provideAnimations(),
