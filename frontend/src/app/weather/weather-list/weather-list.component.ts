@@ -81,7 +81,7 @@ export class WeatherListComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  protected showCurrentWeather(location: string) {
+  protected showWeather(location: string) {
     this.subscriptions.push(this.weatherService.getCurrentWeather(location).subscribe({
       next: (response) => {
         this.currentWeather.set(response)

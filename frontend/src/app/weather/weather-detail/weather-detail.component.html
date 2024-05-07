@@ -7,7 +7,8 @@
           <input [formControl]="cityFormControl" matInput placeholder="Choose location" type="text">
         </mat-form-field>
         <button (click)="getWeather()" color="primary" mat-raised-button>Find</button>
-        <button #saveButton (click)="saveLocation()" *ngIf="isUserSignedIn()" color="primary" mat-raised-button
+        <button #saveButton (click)="saveLocation()" *ngIf="isUserSignedIn()" color="primary" id="saveButton"
+                mat-raised-button
                 matSuffix>
           Uložit
         </button>
@@ -33,8 +34,8 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div class="content">
-      <mat-card *ngIf="isUserSignedIn()">
+    <div *ngIf="isUserSignedIn()" class="content">
+      <mat-card>
         <mat-card-title>Graph of forecast weather</mat-card-title>
         <mat-card-subtitle>
           <mat-icon *ngIf="currentWeather().isDay">brightness_5</mat-icon>

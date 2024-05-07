@@ -75,7 +75,7 @@ export class WeatherDetailComponent implements OnInit, OnDestroy, AfterViewInit 
   }
 
   ngAfterViewInit(): void {
-    this.saveButton.disabled = true
+    this.changeSaveButtonState(true)
     this.changeDetectorRef.detectChanges()
   }
 
@@ -94,15 +94,20 @@ export class WeatherDetailComponent implements OnInit, OnDestroy, AfterViewInit 
     this.subscriptions.push(this.weatherService.saveUserLocation(this.cityFormControl.value).subscribe({
       next: () => {
         this.notificationService.successNotification('City saved')
-        this.saveButton.disabled = true
-        this.changeDetectorRef.detectChanges()
+        this.changeSaveButtonState(true)
       },
       error: () => {
-        this.saveButton.disabled = true
-        this.changeDetectorRef.detectChanges()
+        this.changeSaveButtonState(true)
         this.notificationService.errorNotification('The city is already saved')
       }
     }))
+  }
+
+  private changeSaveButtonState(state: boolean) {
+    if (this.isUserSignedIn()) {
+      this.saveButton.disabled = state
+      this.changeDetectorRef.detectChanges()
+    }
   }
 
   private getCurrentWeather() {
@@ -119,11 +124,11 @@ export class WeatherDetailComponent implements OnInit, OnDestroy, AfterViewInit 
   private getForecastWeather() {
     this.subscriptions.push(this.weatherService.getForecastWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
+        this.changeSaveButtonState(false)
         this.weatherGraphComponent.createChart(response)
-        this.saveButton.disabled = false
-        this.changeDetectorRef.detectChanges()
       },
       error: () => {
+        this.changeSaveButtonState(true)
         this.notificationService.errorNotification('City not found')
       }
     }))

@@ -1,7 +1,6 @@
-.auth-toolbar {
+mat-card-title {
+  background: #3f51b5;
+  display: flex;
   justify-content: center;
-}
-
-.mat-mdc-card {
-  background: #2c3338;
+  color: white;
 }

@@ -15,7 +15,7 @@
         <ng-container matColumnDef="show">
           <th *matHeaderCellDef mat-header-cell> Show weather</th>
           <td *matCellDef="let element" mat-cell>
-            <button (click)="showCurrentWeather(element.location)" color="primary" mat-raised-button>
+            <button (click)="showWeather(element.location)" color="primary" mat-raised-button>
               Show
             </button>
           </td>

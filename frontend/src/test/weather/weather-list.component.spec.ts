@@ -62,9 +62,9 @@ describe('WeatherListComponent', () => {
     });
   })
 
-  describe("showForecastWeather", () => {
+  describe("showWeather", () => {
     it("should show current weather", () => {
-      const response = new CurrentWeatherDetail(
+      const currentWeatherDetail = new CurrentWeatherDetail(
         new Date(),
         20,
         50,
@@ -72,12 +72,21 @@ describe('WeatherListComponent', () => {
         true
       );
 
-      weatherService.getCurrentWeather = jest.fn().mockReturnValue(of(response));
+      const forecastWeatherDetail = new ForecastWeatherDetail(
+        [new Date()],
+        [20],
+        [50],
+        [50]
+      );
 
-      component['showCurrentWeather']('test')
+      weatherService.getCurrentWeather = jest.fn().mockReturnValue(of(currentWeatherDetail));
+      weatherService.getForecastWeather = jest.fn().mockReturnValue(of(forecastWeatherDetail));
+
+      component['showWeather']('test')
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("test");
-      expect(component['currentWeather']()).toEqual(response);
+      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("test");
+      expect(component['currentWeather']()).toEqual(currentWeatherDetail);
     });
 
     it("should show error notification when city is not found", () => {
@@ -85,39 +94,39 @@ describe('WeatherListComponent', () => {
       component['currentWeather'].set(defaultWeather);
 
       weatherService.getCurrentWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
       notificationService.errorNotification = jest.fn();
 
-      component['showCurrentWeather']('test')
+      component['showWeather']('test')
 
       expect(weatherService.getCurrentWeather).toHaveBeenCalledWith("test");
       expect(component['currentWeather']()).toEqual(defaultWeather);
       expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
+      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("test");
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   });
 
-  describe("showCurrentWeather", () => {
-    it("should show forecast weather", () => {
-      const response = new ForecastWeatherDetail(
-        [new Date()],
-        [20],
-        [50],
-        [50]
-      );
+  describe("deleteUserWeatherLocation", () => {
+    it('should delete location and loadLocations', () => {
+      const locations = [new WeatherLocation(1, 'Test')]
+      weatherService.getUserWeatherLocations = jest.fn().mockReturnValue(of(locations));
+      weatherService.deleteUserWeatherLocation = jest.fn().mockReturnValue(of(true))
 
-      weatherService.getForecastWeather = jest.fn().mockReturnValue(of(response));
+      component['deleteUserWeatherLocation'](1);
 
-      component['showForecastWeather']('test');
-
-      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("test");
+      expect(weatherService.deleteUserWeatherLocation).toHaveBeenCalledWith(1);
+      expect(weatherService.getUserWeatherLocations).toHaveBeenCalled();
+      expect(component['weatherLocations']()).toEqual(locations);
     });
 
-    it("should show error notification when city is not found", () => {
-      weatherService.getForecastWeather = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+    it('should show error notification when city is not found', () => {
+      weatherService.deleteUserWeatherLocation = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
       notificationService.errorNotification = jest.fn();
 
-      component['showForecastWeather']('test');
+      component['deleteUserWeatherLocation'](1);
 
-      expect(weatherService.getForecastWeather).toHaveBeenCalledWith("test");
+      expect(weatherService.deleteUserWeatherLocation).toHaveBeenCalledWith(1);
       expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   })
