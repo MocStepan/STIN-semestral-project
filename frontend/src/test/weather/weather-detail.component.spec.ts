@@ -132,10 +132,12 @@ describe('WeatherDetailComponent', () => {
       );
 
       weatherService.getForecastWeather = jest.fn().mockReturnValue(of(response));
+      component['changeSaveButtonState'] = jest.fn();
 
       component['getForecastWeather']();
 
       expect(weatherService.getForecastWeather).toHaveBeenCalledWith("Test");
+      expect(component['changeSaveButtonState']).toHaveBeenCalledWith(false);
     });
 
     it("should show error notification when city is not found", () => {
@@ -151,4 +153,62 @@ describe('WeatherDetailComponent', () => {
       expect(notificationService.errorNotification).toHaveBeenCalledWith('City not found');
     });
   })
+
+  describe("saveLocation", () => {
+    it('should save location', () => {
+      component['cityFormControl'].setValue("Test");
+
+      weatherService.saveUserLocation = jest.fn().mockReturnValue(of(true));
+      notificationService.successNotification = jest.fn();
+      component['changeSaveButtonState'] = jest.fn();
+
+      component['saveLocation']();
+
+      expect(weatherService.saveUserLocation).toHaveBeenCalledWith("Test");
+      expect(notificationService.successNotification).toHaveBeenCalledWith('City saved');
+      expect(component['changeSaveButtonState']).toHaveBeenCalledWith(true);
+    });
+
+    it('should show error notification when city is already saved', () => {
+      component['cityFormControl'].setValue("Test");
+
+      weatherService.saveUserLocation = jest.fn().mockReturnValue(throwError(() => ({status: 500})));
+      notificationService.errorNotification = jest.fn();
+      component['changeSaveButtonState'] = jest.fn();
+
+      component['saveLocation']();
+
+      expect(weatherService.saveUserLocation).toHaveBeenCalledWith("Test");
+      expect(notificationService.errorNotification).toHaveBeenCalledWith('The city is already saved');
+      expect(component['changeSaveButtonState']).toHaveBeenCalledWith(true);
+
+    });
+  })
+
+  describe("changeSaveButtonState", () => {
+    beforeEach(() => {
+      component['saveButton'] = document.createElement('button');
+      component['changeDetectorRef'].detectChanges = jest.fn();
+    })
+
+    it("should change save button state", () => {
+      component['isUserSignedIn'].set(true);
+      component['saveButton'].disabled = false;
+
+      component['changeSaveButtonState'](true);
+
+      expect(component['saveButton'].disabled).toEqual(true);
+      expect(component['changeDetectorRef'].detectChanges).toHaveBeenCalled();
+    });
+
+    it("should not change save button state", () => {
+      component['isUserSignedIn'].set(false);
+      component['saveButton'].disabled = false;
+
+      component['changeSaveButtonState'](true);
+
+      expect(component['saveButton'].disabled).toEqual(false);
+      expect(component['changeDetectorRef'].detectChanges).not.toHaveBeenCalled();
+    });
+  });
 });

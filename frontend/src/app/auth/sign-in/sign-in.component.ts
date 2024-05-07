@@ -3,7 +3,7 @@ import {AuthService} from "../service/auth.service";
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {SignInForm} from "../model/SignInForm";
 import {MatFormField, MatPrefix} from "@angular/material/form-field";
-import {MatCard} from "@angular/material/card";
+import {MatCard, MatCardHeader, MatCardTitle} from "@angular/material/card";
 import {MatToolbar} from "@angular/material/toolbar";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
@@ -26,7 +26,9 @@ import {Subscription} from "rxjs";
     MatButton,
     NgIf,
     ReactiveFormsModule,
-    MatPrefix
+    MatPrefix,
+    MatCardHeader,
+    MatCardTitle
   ],
   templateUrl: './sign-in.component.html',
   styleUrl: '../style/auth.component.css',

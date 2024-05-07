@@ -64,7 +64,7 @@ export class WeatherListComponent implements OnInit, OnDestroy {
   @ViewChild(WeatherGraphComponent) weatherGraphComponent!: WeatherGraphComponent;
   protected weatherLocations: WritableSignal<WeatherLocation[]> = signal([])
   protected currentWeather: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
-  protected displayedColumns: string[] = ['id', 'location', 'current', 'forecast'];
+  protected displayedColumns: string[] = ['id', 'location', 'show', 'delete'];
   protected readonly moment = moment;
   private weatherService = inject(WeatherService);
   private notificationService = inject(NotificationService)
@@ -81,7 +81,7 @@ export class WeatherListComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach(sub => sub.unsubscribe());
   }
 
-  protected showCurrentWeather(location: string) {
+  protected showWeather(location: string) {
     this.subscriptions.push(this.weatherService.getCurrentWeather(location).subscribe({
       next: (response) => {
         this.currentWeather.set(response)
@@ -90,12 +90,20 @@ export class WeatherListComponent implements OnInit, OnDestroy {
         this.notificationService.errorNotification('City not found')
       }
     }))
-  }
-
-  protected showForecastWeather(location: string) {
     this.subscriptions.push(this.weatherService.getForecastWeather(location).subscribe({
       next: (response) => {
         this.weatherGraphComponent.createChart(response)
+      },
+      error: () => {
+        this.notificationService.errorNotification('City not found')
+      }
+    }))
+  }
+
+  protected deleteUserWeatherLocation(id: number) {
+    this.subscriptions.push(this.weatherService.deleteUserWeatherLocation(id).subscribe({
+      next: () => {
+        this.loadLocations()
       },
       error: () => {
         this.notificationService.errorNotification('City not found')

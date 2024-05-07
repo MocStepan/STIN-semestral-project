@@ -19,35 +19,44 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.flex-container .col {
+.container {
+  width: 100%;
+  align-items: stretch;
   display: flex;
-  flex-flow: column wrap;
-  padding-top: 1em;
-}
-
-.flex-container .row {
-  display: flex;
-  flex-flow: row wrap;
-  column-gap: 1rem;
-  padding-top: 1em;
-}
-
-.flex-container-end {
-  justify-content: flex-end;
-  align-items: center;
-  margin: 1em auto;
-}
-
-.flex-container-start {
-  justify-content: flex-start;
-}
-
-.flex-container-center {
   justify-content: center;
-  align-items: center;
-  margin: 1em auto;
+  flex-flow: row wrap;
+}
+
+form {
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  margin: 1em;
+}
+
+.mat-form-field {
+  width: 100%;
+}
+
+.mat-raised-button {
+  width: 100%;
+  height: 60px;
+  margin-top: 15px;
 }
 
 .mat-mdc-card-subtitle {
   color: black !important;
+}
+
+.mat-mdc-card {
+  background: white;
+  padding: 1em;
+  width: 350px;
+}
+
+.mat-card-title {
+  font-size: 1.5em;
+  font-weight: bold;
 }

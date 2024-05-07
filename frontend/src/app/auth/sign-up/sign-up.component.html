@@ -1,10 +1,10 @@
 <form #formDirective="ngForm" (ngSubmit)="onSubmit()"
       *ngIf="formGroup"
       [formGroup]="formGroup">
-  <div class="auth-container">
-    <div class="auth-content">
-      <mat-toolbar class="auth-toolbar" color="primary">Sign in</mat-toolbar>
+  <div class="container">
+    <div class="content">
       <mat-card>
+        <mat-card-title>Sign up</mat-card-title>
 
         <mat-form-field>
           <mat-icon matPrefix>person_outline</mat-icon>

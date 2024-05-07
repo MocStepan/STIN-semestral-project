@@ -1,4 +1,15 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit, signal, ViewChild, WritableSignal} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+  WritableSignal
+} from '@angular/core';
 import {MatFormField, MatPrefix, MatSuffix} from "@angular/material/form-field";
 import {MatInput} from "@angular/material/input";
 import {MatButton} from "@angular/material/button";
@@ -45,21 +56,27 @@ import moment from "moment";
   templateUrl: './weather-detail.component.html',
   styleUrl: './weather-detail.component.css'
 })
-export class WeatherDetailComponent implements OnInit, OnDestroy {
+export class WeatherDetailComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(WeatherGraphComponent) weatherGraphComponent!: WeatherGraphComponent;
+  @ViewChild("saveButton") saveButton!: HTMLButtonElement;
   protected cityFormControl = new FormControl();
   protected currentWeather: WritableSignal<CurrentWeatherDetail> = signal(CurrentWeatherDetail.createDefault())
   protected isUserSignedIn: WritableSignal<boolean> = signal(false)
   protected readonly moment = moment;
-  private subscriptions: Subscription[] = [];
 
-  constructor(private weatherService: WeatherService,
-              private notificationService: NotificationService,
-              private authService: AuthService) {
-  }
+  private subscriptions: Subscription[] = [];
+  private weatherService = inject(WeatherService)
+  private notificationService = inject(NotificationService)
+  private authService = inject(AuthService)
+  private changeDetectorRef = inject(ChangeDetectorRef)
 
   ngOnInit(): void {
     this.isUserSignedIn.set(this.authService.isSignedIn())
+  }
+
+  ngAfterViewInit(): void {
+    this.changeSaveButtonState(true)
+    this.changeDetectorRef.detectChanges()
   }
 
   ngOnDestroy(): void {
@@ -77,11 +94,20 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.weatherService.saveUserLocation(this.cityFormControl.value).subscribe({
       next: () => {
         this.notificationService.successNotification('City saved')
+        this.changeSaveButtonState(true)
       },
       error: () => {
-        this.notificationService.errorNotification('The city cannot be saved')
+        this.changeSaveButtonState(true)
+        this.notificationService.errorNotification('The city is already saved')
       }
     }))
+  }
+
+  private changeSaveButtonState(state: boolean) {
+    if (this.isUserSignedIn()) {
+      this.saveButton.disabled = state
+      this.changeDetectorRef.detectChanges()
+    }
   }
 
   private getCurrentWeather() {
@@ -98,9 +124,11 @@ export class WeatherDetailComponent implements OnInit, OnDestroy {
   private getForecastWeather() {
     this.subscriptions.push(this.weatherService.getForecastWeather(this.cityFormControl.value).subscribe({
       next: (response) => {
+        this.changeSaveButtonState(false)
         this.weatherGraphComponent.createChart(response)
       },
       error: () => {
+        this.changeSaveButtonState(true)
         this.notificationService.errorNotification('City not found')
       }
     }))

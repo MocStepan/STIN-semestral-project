@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {AuthService} from "../service/auth.service";
 import {FormBuilder, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatButton} from "@angular/material/button";
-import {MatCard} from "@angular/material/card";
+import {MatCard, MatCardTitle} from "@angular/material/card";
 import {MatFormField, MatPrefix} from "@angular/material/form-field";
 import {MatIcon} from "@angular/material/icon";
 import {MatInput} from "@angular/material/input";
@@ -26,7 +26,8 @@ import {Subscription} from "rxjs";
     MatToolbar,
     NgIf,
     ReactiveFormsModule,
-    MatPrefix
+    MatPrefix,
+    MatCardTitle
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: '../style/auth.component.css',
