@@ -1,4 +1,4 @@
-import {environment} from "../../environments/environment.development";
+import {environment} from "../../environments/environment.dev";
 
 describe('Development Environment Configuration', () => {
   it('should have correct baseUrl for development', () => {
@@ -10,6 +10,6 @@ describe('Development Environment Configuration', () => {
   });
 
   it('should have version set to 0.0.1 for development', () => {
-    expect(environment.version).toBe('0.0.1');
+    expect(environment.version).toBe('1.0.0');
   });
 });
