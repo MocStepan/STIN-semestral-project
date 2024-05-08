@@ -1,0 +1,12 @@
+FROM adoptopenjdk/openjdk17:alpine-slim
+
+ENV SPRING_PROFILES_ACTIVE=prod
+
+WORKDIR /app
+
+COPY build/libs/*.jar /app/application.jar
+COPY src/main/resources/application-prod.yml /app/application-prod.yml
+
+EXPOSE 8080
+
+CMD ["java", "-jar", "/app/application.jar", "--spring.config.location=file:/app/application-prod.yml"]

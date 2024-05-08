@@ -40,24 +40,16 @@ jobs:
       - name: create jar
         run: ./gradlew bootJar
 
-      - name: build the docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          dockerfile: Dockerfile
-          push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rest-api:latest
-
       - name: login to docker hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: push the docker image to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          dockerfile: Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rest-api:latest
+      - name: Set env
+        run: echo "DATE=$(date +%s)" >> $GITHUB_ENV
+
+      - name: Build and push Docker image for backend
+        run: |
+          docker build -f Dockerfile-backend -t stin-project/backend:${{ env.DATE }} .
+          docker push stin-project/backend:${{ env.DATE }}
