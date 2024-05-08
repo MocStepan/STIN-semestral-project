@@ -31,6 +31,7 @@ jobs:
          generate-job-summary: true
          add-job-summary-as-pr-comment: on-failure
          cache-disabled: true
+
      - name: Set execute permissions for backend gradlew
        run: chmod +x gradlew
 
