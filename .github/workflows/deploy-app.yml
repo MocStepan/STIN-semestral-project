@@ -33,4 +33,3 @@ jobs:
           healthcheck: false
           branch: 'main'
           appdir: 'frontend'
-          procfile: 'web: npm build:prod && npm start:prod'
