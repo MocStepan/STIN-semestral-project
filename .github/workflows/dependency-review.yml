@@ -6,6 +6,10 @@ on:
     workflows: ["Build"]
     types:
       - completed
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
