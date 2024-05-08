@@ -4,7 +4,7 @@ ENV SPRING_PROFILES_ACTIVE=prod
 
 WORKDIR /app
 
-COPY ../../backend/build/libs/backend-1.0.0.jar /app/backend.jar
+COPY ../../backend/build/libs/*.jar /app/backend.jar
 
 EXPOSE 8080
 
