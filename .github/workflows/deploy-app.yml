@@ -1,4 +1,4 @@
-name: Deploy frontend and backend
+name: Deploy app
 run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:

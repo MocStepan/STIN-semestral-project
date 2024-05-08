@@ -1,4 +1,4 @@
-import {environment} from "../../environments/environment.development";
+import {environment} from "../../environments/environment.dev";
 
 describe('Development Environment Configuration', () => {
   it('should have correct baseUrl for development', () => {
