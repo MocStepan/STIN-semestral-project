@@ -25,4 +25,4 @@ jobs:
           healthcheck: false
           branch: 'main'
           appdir: 'backend'
-          procfile: 'web: java -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
+          procfile: 'web: java -Dserver.port=8080 -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
