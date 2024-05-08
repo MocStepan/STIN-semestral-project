@@ -1,4 +1,6 @@
-name: 'Dependency review'
+name: Dependency review
+run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
+
 on:
   pull_request:
     branches: [ "main" ]
