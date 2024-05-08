@@ -1,11 +1,10 @@
-FROM openjdk:17
+FROM heroku/openjdk
 
 ENV SPRING_PROFILES_ACTIVE=prod
+ENV PORT=8080
 
 WORKDIR /app
 
 COPY ../../backend/build/libs/*.jar /app/backend.jar
 
-EXPOSE 8080
-
-CMD ["java", "-jar", "/app/backend.jar"]
+CMD ["sh", "-c", "java -Dserver.port=$PORT -jar /app/backend.jar"]
