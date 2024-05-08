@@ -19,7 +19,6 @@ jobs:
       run:
         working-directory: backend
     steps:
-     - name: Checkout backend repo
      - uses: actions/checkout@v4
 
      - name: Set up JDK 17 for backend
@@ -47,7 +46,6 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - name: Checkout frontend repo
       - uses: actions/checkout@v4
 
       - name: Use Node.js 20.x
@@ -78,7 +76,6 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - name: Checkout backend repo
       - uses: actions/checkout@v4
 
       - name: Build backend and run tests with Gradle Wrapper
@@ -91,7 +88,6 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - name: Checkout frontend repo
       - uses: actions/checkout@v4
 
       - name: Restore Node.js cache
