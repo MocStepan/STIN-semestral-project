@@ -1,7 +1,10 @@
 name: 'Dependency review'
 on:
-  pull_request:
-    branches: [ "main" ]
+  workflow_run:
+    workflows: [Build]
+    types:
+      - completed
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -10,6 +13,7 @@ permissions:
 jobs:
   dependency-review:
     runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: 'Checkout repository'
         uses: actions/checkout@v4
@@ -17,3 +21,6 @@ jobs:
         uses: actions/dependency-review-action@v4
         with:
           comment-summary-in-pr: always
+    else:
+      steps:
+        - run: echo 'The triggering workflow failed'
