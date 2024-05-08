@@ -19,7 +19,9 @@ jobs:
       run:
         working-directory: backend
     steps:
+     - name: Checkout backend repo
      - uses: actions/checkout@v4
+
      - name: Set up JDK 17 for backend
        uses: actions/setup-java@v4
        with:
@@ -45,13 +47,23 @@ jobs:
       run:
         working-directory: frontend
     steps:
+      - name: Checkout frontend repo
       - uses: actions/checkout@v4
+
       - name: Use Node.js 20.x
         uses: actions/setup-node@v4
         with:
           node-version: 20.x
           cache: 'npm'
           cache-dependency-path: frontend/package-lock.json
+
+      - name: Cache Node.js dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install dependencies
         run: npm install
@@ -66,7 +78,9 @@ jobs:
       run:
         working-directory: backend
     steps:
+      - name: Checkout backend repo
       - uses: actions/checkout@v4
+
       - name: Build backend and run tests with Gradle Wrapper
         run: ./gradlew test
 
@@ -77,7 +91,15 @@ jobs:
       run:
         working-directory: frontend
     steps:
+      - name: Checkout frontend repo
       - uses: actions/checkout@v4
+
+      - name: Restore Node.js cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
       - name: Run tests
         run: npm run test
 
