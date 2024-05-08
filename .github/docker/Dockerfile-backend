@@ -2,11 +2,9 @@ FROM openjdk:17
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
-ARG JAR_FILE=build/libs/*.jar
-
 WORKDIR /app
 
-COPY ${JAR_FILE} /app/backend.jar
+COPY ../../backend/build/libs/*.jar /app/backend.jar
 
 EXPOSE 8080
 
