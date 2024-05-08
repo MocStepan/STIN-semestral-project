@@ -1,0 +1,33 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+  application:
+    name: backend
+  liquibase:
+    change-log: db/changelog/db.changelog-master.xml
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://${DATABASE_HOST}:${DATABASE_PORT}/${DATABASE_NAME}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+  jpa:
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.lob.non_contextual_creation: true # for postgresql
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        use_nationalized_character_data: true
+        temp:
+          use_jdbc_metadata_defaults: false
+        show_sql: false
+        default_schema: public
+  security:
+    user:
+      name: ${SECURITY_USERNAME}
+      password: ${SECURITY_PASSWORD}
+  jwt:
+    secure: false
+    sameSite: "Lax"
+    duration: 86400000 # 1 day
+    secret: ${JWT_SECRET}

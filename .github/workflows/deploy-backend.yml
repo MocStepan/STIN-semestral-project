@@ -1,19 +1,30 @@
 name: Deploy
 run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["main"]
+
+defaults:
+  run:
+    working-directory: backend
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v2
-      - uses: akhileshns/heroku-deploy@v3.13.15 # This is the action
+      - uses: actions/checkout@v4
+      - name: Deploy backend to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "moc-weather-app" #Must be unique in Heroku
-          heroku_email: "stepan.moc@tul.cz"
-          procfile: "web: java -Dspring.profiles.active=prod -Dserver.port=$PORT -jar build/libs/backend-0.0.1-SNAPSHOT.jar"
+          heroku_app_name: ${{ secrets.HEROKU_BACKEND_NAME }}
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          healthcheck: false
+          branch: 'main'
+          appdir: 'backend'
+          procfile: 'web: java -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
