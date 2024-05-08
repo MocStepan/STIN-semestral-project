@@ -7,22 +7,21 @@ on:
     branches: ["main"]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: backend
     steps:
       - uses: actions/checkout@v2
-      - name: Login to Heroku Container registry
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:login
-      - name: Build and push
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a moc-backend-weather-app web
-      - name: Release
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a moc-backend-weather-app web
+      - name: Setup and Run Tests
+        run: |
+          docker-compose build
+          docker-compose run web rake db:setup
+          docker-compose run web rspec
+
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This action deploys the content on Heroku
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} #The Heroku api key we stored on our repo secret
+          heroku_app_name: "moc-backend-weather-app" #The name of your heroku app - Must be unique in Heroku
+          heroku_email: "stepan.moc@tul.cz" #Your heroku yuser name
