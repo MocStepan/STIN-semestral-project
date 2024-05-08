@@ -4,9 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
-    "build:production": "node build.js --configuration production",
-    "start:production": "node serve.js --configuration production",
+    "build": "ng build --prod",
     "watch": "ng build --watch --configuration development",
     "test": "jest --verbose --coverage",
     "test:coverage": "jest --coverage",
