@@ -30,10 +30,15 @@ jobs:
         with:
           generate-job-summary: true
           add-job-summary-as-pr-comment: on-failure
-          cache-disabled: false
+          cache-disabled: true
+      - name: Set execute permissions for backend gradlew
+        run: chmod +x gradlew
 
       - name: Build backend and run tests with Gradle Wrapper
-        run: chmod +x ./gradlew build
+        run: ./gradlew build
+
+      - name: create jar
+        run: ./gradlew bootJar
 
       - name: login to docker hub
         uses: docker/login-action@v1
