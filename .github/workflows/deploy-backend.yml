@@ -17,53 +17,10 @@ jobs:
       run:
         working-directory: backend
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up JDK 17 for backend
-        uses: actions/setup-java@v4
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.13.15 # This is the action
         with:
-          java-version: 17
-          distribution: temurin
-
-      - name: setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          generate-job-summary: true
-          add-job-summary-as-pr-comment: on-failure
-          cache-disabled: true
-      - name: Set execute permissions for backend gradlew
-        run: chmod +x gradlew
-
-      - name: Build backend and run tests with Gradle Wrapper
-        run: ./gradlew build
-
-      - name: login to docker hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      - name: Set env
-        run: echo "DATE=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: .github/docker/Dockerfile-backend
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.DATE }}
-
-      - name: Build, Push and Release a Docker container to Heroku.
-        uses: gonuit/heroku-docker-deploy@v1.3.3
-        with:
-          email: ${{ secrets.HEROKU_EMAIL }}
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ secrets.HEROKU_BACKEND_NAME }}
-          dockerfile_directory: .github/docker
-          dockerfile_name: Dockerfile-backend
-          docker_options: "--no-cache"
-          process_type: web
+          heroku_email: ${{ secrets.HEROKU_EMAIL }}
+          appdir: "backend"
