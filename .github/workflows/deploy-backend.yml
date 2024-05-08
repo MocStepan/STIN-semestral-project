@@ -14,22 +14,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build the Docker image
-        run: docker build . --file Dockerfile --tag registry.heroku.com/moc-backend-weather-app/web
-
-      - name: Log in to Heroku Container Registry
-        run: echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=stepan.moc@tul.cz --password-stdin registry.heroku.com
-
-      - name: Push Docker image to Heroku Container Registry
-        run: docker push registry.heroku.com/moc-backend-weather-app/web
-
-      - name: Release the image on Heroku
-        run: heroku container:release web --app moc-backend-weather-app
-        env:
-          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+      - uses: actions/checkout@v2 # This actions copy the repository on the environment
+      - uses: akhileshns/heroku-deploy@v3.12.12 # This action deploys the content on Heroku
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY}} #The Heroku api key we stored on our repo secret
+          heroku_app_name: "moc-backend-weather-app" #The name of your heroku app - Must be unique in Heroku
+          heroku_email: "stepan.moc@tul.cz" #Your heroku yuser name
