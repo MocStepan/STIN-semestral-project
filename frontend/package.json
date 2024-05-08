@@ -9,7 +9,7 @@
     "test": "jest --verbose --coverage",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "heroku-postbuild": "ng build --prod"
+    "heroku-postbuild": "ng build --configuration production"
   },
   "private": true,
   "dependencies": {
