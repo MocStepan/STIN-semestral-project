@@ -3,7 +3,10 @@ run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
   workflow_dispatch:
-
+  pull_request:
+    branches:
+      - main
+      -
 defaults:
   run:
     working-directory: backend
@@ -25,4 +28,4 @@ jobs:
           healthcheck: false
           branch: 'main'
           appdir: 'backend'
-          procfile: 'web: java -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
+          procfile: 'web: java $JAVA_OPTS -Dserver.port=$PORT -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
