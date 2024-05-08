@@ -1,9 +1,7 @@
 name: 'Dependency review'
+run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
+
 on:
-  workflow_run:
-    workflows: [Build]
-    types:
-      - completed
   workflow_dispatch:
 
 permissions:
@@ -15,6 +13,14 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     steps:
+      - name: Wait for Other Workflows
+        uses: lewagon/wait-on-check-action@v1.3.4
+        with:
+          ref: ${{ github.ref }}
+          checks: "Build"
+          wait-for: "success"
+          timeout: 300000
+
       - name: 'Checkout repository'
         uses: actions/checkout@v4
       - name: 'Dependency Review'
