@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "node serve.js",
+    "start": "node index.js",
     "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "jest --verbose --coverage",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "heroku-postbuild": "ng build --prod"
   },
   "private": true,
   "dependencies": {
