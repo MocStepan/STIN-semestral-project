@@ -1,11 +1,13 @@
-FROM openjdk:17-alpine
+FROM openjdk:17
 
 ENV SPRING_PROFILES_ACTIVE=prod
 
+ARG JAR_FILE=build/libs/*.jar
+
 WORKDIR /app
 
-COPY build/libs/backend-0.0.1-SNAPSHOT.jar /app/backend.jar
+COPY ${JAR_FILE} /app/backend.jar
 
 EXPOSE 8080
 
-CMD ["java", "-jar", "/app/application.jar"]
+CMD ["java", "-jar", "/app/backend.jar"]
