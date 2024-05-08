@@ -1,0 +1,22 @@
+name: Test
+run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    needs: [ build-backend, build-frontend ]
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Echo
+        echo: "Hello, world!"
