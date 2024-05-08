@@ -1,4 +1,4 @@
-FROM heroku/openjdk
+FROM openjdk:17
 
 ENV SPRING_PROFILES_ACTIVE=prod
 ENV PORT=8080
