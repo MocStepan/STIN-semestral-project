@@ -11,12 +11,53 @@ defaults:
     working-directory: backend
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
     steps:
-      - uses: actions/checkout@v2 # This actions copy the repository on the environment
-      - uses: akhileshns/heroku-deploy@v3.12.12 # This action deploys the content on Heroku
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17 for backend
+        uses: actions/setup-java@v4
         with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}} #The Heroku api key we stored on our repo secret
-          heroku_app_name: "moc-backend-weather-app" #The name of your heroku app - Must be unique in Heroku
-          heroku_email: "stepan.moc@tul.cz" #Your heroku yuser name
+          java-version: 17
+          distribution: temurin
+
+      - name: setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+        with:
+          generate-job-summary: true
+          add-job-summary-as-pr-comment: on-failure
+          cache-disabled: true
+      - name: Set execute permissions for backend gradlew
+        run: chmod +x gradlew
+
+      - name: Build backend and run tests with Gradle Wrapper
+        run: ./gradlew build
+
+      - name: create jar
+        run: ./gradlew bootJar
+
+      - name: build the docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: false
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rest-api:latest
+
+      - name: login to docker hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
+
+      - name: push the docker image to docker hub
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          dockerfile: Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/rest-api:latest
