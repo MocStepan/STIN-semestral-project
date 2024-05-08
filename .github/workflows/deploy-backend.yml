@@ -37,26 +37,6 @@ jobs:
       - name: Build backend and run tests with Gradle Wrapper
         run: ./gradlew build
 
-      - name: login to docker hub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
-
-      - name: Set env
-        run: echo "DATE=$(date +%s)" >> $GITHUB_ENV
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: .github/docker/Dockerfile-backend
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/backend:${{ env.DATE }}
-
       - name: Login to Heroku Container Registry
         run: echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
 
@@ -68,3 +48,23 @@ jobs:
 
       - name: Release Docker image on Heroku
         run: heroku container:release -a ${{ secrets.HEROKU_BACKEND_NAME }} backend
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Heroku Container Registry
+        run: echo "${{ secrets.HEROKU_API_KEY }}" | docker login --username=_ --password-stdin registry.heroku.com
+
+      - name: Build and push Docker image to Heroku
+        run: docker buildx build --file Dockerfile-backend --tag registry.heroku.com/${{ secrets.HEROKU_BACKEND_NAME }}/web .
+
+      - name: Deploy to Heroku
+        run: docker push registry.heroku.com/${{ secrets.HEROKU_BACKEND_NAME }}/web
+
+      - name: Release to Heroku
+        run: heroku container:release web -a ${{ secrets.HEROKU_BACKEND_NAME }}
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
