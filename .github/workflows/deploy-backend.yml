@@ -37,17 +37,15 @@ jobs:
       - name: Build backend and run tests with Gradle Wrapper
         run: ./gradlew build
 
-      - name: Login to Heroku
-        uses: actions/heroku@v7
-        with:
-          email: ${{ secrets.HEROKU_EMAIL }}
-          api_key: ${{ secrets.HEROKU_API_KEY }}
+      - name: Login to Heroku Container registry
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v1
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
