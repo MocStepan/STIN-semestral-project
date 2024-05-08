@@ -2,6 +2,10 @@ name: Dependency review
 run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
   workflow_dispatch:
 
 permissions:
