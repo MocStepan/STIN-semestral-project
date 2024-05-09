@@ -27,23 +27,10 @@ jobs:
           distribution: temurin
 
       - name: setup Gradle
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          generate-job-summary: true
-          add-job-summary-as-pr-comment: on-failure
-          cache-disabled: true
-      - name: Set execute permissions for backend gradlew
-        run: chmod +x gradlew
+        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
 
-      - name: Build backend and run tests with Gradle Wrapper
-        run: ./gradlew build
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4.0.1
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: backend
-          file: backend/build/reports/jacoco/test/html/jacocoTestReport.xml
+      - name: Build backend with Gradle Wrapper
+        run: ./gradlew build -x test
 
   backend-test:
     name: Test backend
