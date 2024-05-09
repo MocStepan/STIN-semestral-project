@@ -48,7 +48,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          appdir: '.'  # Deploy the root directory, which contains both backend and frontend
           procfile: |
             web: java $JAVA_OPTS -Dserver.port=$PORT -jar backend.jar --spring.profiles.active=prod
             build: cd frontend && npm start
