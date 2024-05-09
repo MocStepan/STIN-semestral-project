@@ -31,6 +31,6 @@ spring:
       password: ${SECURITY_PASSWORD}
   jwt:
     secure: true
-    sameSite: "Strict"
+    sameSite: "Lax"
     duration: 86400000 # 1 day
     secret: ${JWT_SECRET}

@@ -6,7 +6,6 @@ on:
   pull_request:
     branches:
       - main
-
 jobs:
   deploy-backend:
     runs-on: ubuntu-latest
