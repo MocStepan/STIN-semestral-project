@@ -10,12 +10,28 @@ jobs:
   deploy-backend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Deploy backend to Heroku
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build Backend
+        working-directory: backend
+        run: |
+          ./gradlew build
+          cp build/libs/backend-1.0.0.jar ../backend.jar
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: |
+          npm install
+          npm run build
+
+      - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: ${{ secrets.HEROKU_BACKEND_NAME }}
+          heroku_app_name: ${{ secrets.HEROKU_APP_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          procfile: 'web: java $JAVA_OPTS -Dserver.port=$PORT -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
-
+          appdir: '.'  # Deploy the root directory, which contains both backend and frontend
+          procfile: |
+            web: java $JAVA_OPTS -Dserver.port=$PORT -jar backend.jar --spring.profiles.active=prod
+            build: cd frontend && npm start
