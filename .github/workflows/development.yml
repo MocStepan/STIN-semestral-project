@@ -25,19 +25,13 @@ jobs:
         with:
           java-version: 17
           distribution: temurin
-
-      - name: setup Gradle
-        uses: gradle/actions/setup-gradle@417ae3ccd767c252f5661f1ace9f835f9654f2b5
+          cache: gradle
+          cache-dependency-path: |
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
 
       - name: Build backend with Gradle Wrapper
         run: ./gradlew build -x test
-
-      - name: Cache Gradle dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: ${{ runner.os }}-gradle-
 
   backend-test:
     name: Test backend
