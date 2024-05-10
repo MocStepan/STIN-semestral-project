@@ -5,6 +5,8 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.util.WebUtils
 
+private val log = KotlinLogging.logger {}
+
 @Component
 class TokenFilter(
   private val accessTokenService: AccessTokenService
@@ -12,7 +14,7 @@ class TokenFilter(
 
   fun validateRequest(request: HttpServletRequest): AccessTokenClaims? {
     val token = WebUtils.getCookie(request, accessTokenService.COOKIE_NAME)
-
+    log.error { "Token: $token" }
     if (token != null) {
       return accessTokenService.extractClaims(token.value)
     }
