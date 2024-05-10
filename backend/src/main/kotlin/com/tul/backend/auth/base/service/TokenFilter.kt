@@ -4,6 +4,7 @@ import com.tul.backend.auth.base.dto.AccessTokenClaims
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.stereotype.Component
 import org.springframework.web.util.WebUtils
+import io.github.oshai.kotlinlogging.KotlinLogging
 
 private val log = KotlinLogging.logger {}
 
