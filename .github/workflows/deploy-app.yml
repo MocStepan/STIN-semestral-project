@@ -3,6 +3,8 @@ run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   deploy-backend:
@@ -15,7 +17,6 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_BACKEND_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          branch: 'main'
           appdir: 'backend'
           procfile: 'web: java $JAVA_OPTS -Dserver.port=$PORT -jar build/libs/backend-1.0.0.jar --spring.profiles.active=prod'
 
@@ -29,5 +30,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: ${{ secrets.HEROKU_FRONTEND_NAME }}
           heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          branch: 'main'
           appdir: 'frontend'
