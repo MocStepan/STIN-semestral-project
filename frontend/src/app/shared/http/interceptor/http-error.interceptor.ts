@@ -3,6 +3,7 @@ import {inject, Injectable} from "@angular/core";
 import {catchError, Observable, throwError} from "rxjs";
 import {NotificationService} from "../../notification/service/notification.service";
 import {Router} from "@angular/router";
+import {AuthService} from "../../../auth/service/auth.service";
 
 @Injectable()
 export class HttpErrorInterceptor implements HttpInterceptor {
@@ -14,6 +15,7 @@ export class HttpErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         if (error.status == 401) {
           this.notificationService.errorNotification("You do not have access to this feature, please login")
+          sessionStorage.removeItem('auth')
           this.router.navigate(['/signIn'])
         }
         return throwError(error)

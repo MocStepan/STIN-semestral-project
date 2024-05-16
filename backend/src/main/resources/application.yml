@@ -21,6 +21,6 @@ spring:
         default_schema: public
   jwt:
     secure: true
-    sameSite: "none"
+    sameSite: "Lax"
     duration: 86400000 # 1 day
     secret: "7A25432A462D4A614E645267556B58703272357538782F413F4428472B4B6250" # random string in base64, should be changed in production

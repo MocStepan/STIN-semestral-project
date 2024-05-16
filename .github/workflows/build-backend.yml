@@ -3,9 +3,9 @@ run-name: "Run ${{github.run_id}}, triggered by ${{github.actor}}"
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   backend:
@@ -16,29 +16,22 @@ jobs:
       run:
         working-directory: backend
     steps:
-     - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-     - name: Set up JDK 17 for backend
-       uses: actions/setup-java@v4
-       with:
-        java-version: 17
-        distribution: temurin
+      - name: Build and test backend
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+          cache-dependency-path: |
+            backend/*.gradle*
+            backend/**/gradle-wrapper.properties
+      - run: ./gradlew build --no-daemon
 
-     - name: setup Gradle
-       uses: gradle/actions/setup-gradle@v3
-       with:
-         generate-job-summary: true
-         add-job-summary-as-pr-comment: on-failure
-         cache-disabled: true
-     - name: Set execute permissions for backend gradlew
-       run: chmod +x gradlew
-
-     - name: Build backend and run tests with Gradle Wrapper
-       run: ./gradlew build
-
-     - name: Upload coverage reports to Codecov
-       uses: codecov/codecov-action@v4.0.1
-       with:
-         token: ${{ secrets.CODECOV_TOKEN }}
-         flags: backend
-         file: backend/build/reports/jacoco/test/html/jacocoTestReport.xml
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: backend
+          file: backend/build/reports/jacoco/test/html/jacocoTestReport.xml
