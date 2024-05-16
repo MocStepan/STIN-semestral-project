@@ -34,3 +34,4 @@ spring:
     sameSite: "Lax"
     duration: 86400000 # 1 day
     secret: ${JWT_SECRET}
+    frontendUrl: ${FRONTEND_URL}

@@ -8,9 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
-import io.github.oshai.kotlinlogging.KotlinLogging
-
-private val log = KotlinLogging.logger {}
 
 @Component
 class JwtAuthenticationFilter(
@@ -23,7 +20,7 @@ class JwtAuthenticationFilter(
     filterChain: FilterChain
   ) {
     val validClaims = tokenFilter.validateRequest(request)
-    log.error { "Claims: $validClaims" }
+
     if (validClaims != null) {
       val authToken = UsernamePasswordAuthenticationToken(validClaims, null, listOf(validClaims.authUserRole))
       SecurityContextHolder.getContext().authentication = authToken

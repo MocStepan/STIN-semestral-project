@@ -26,8 +26,9 @@ class SecurityConfigurationTests : FeatureSpec({
       val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
-        objectMapper,
-        jwtAuthenticationFilter
+          objectMapper,
+          jwtAuthenticationFilter,
+          "http://localhost:4200"
       )
 
       val httpSecurity = mockk<HttpSecurity>()
@@ -50,8 +51,9 @@ class SecurityConfigurationTests : FeatureSpec({
       val jwtAuthenticationFilter = mockk<JwtAuthenticationFilter>()
 
       val securityConfiguration = SecurityConfiguration(
-        objectMapper,
-        jwtAuthenticationFilter
+          objectMapper,
+          jwtAuthenticationFilter,
+          "http://localhost:4200"
       )
       val errorDTO = ErrorDTO("Unauthorized")
 
