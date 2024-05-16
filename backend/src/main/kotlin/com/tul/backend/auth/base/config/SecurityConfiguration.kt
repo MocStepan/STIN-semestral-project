@@ -5,6 +5,7 @@ import com.tul.backend.auth.base.dto.ErrorDTO
 import com.tul.backend.auth.base.valueobject.AuthUserRole
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.MediaType
@@ -25,7 +26,8 @@ import org.springframework.web.cors.CorsConfigurationSource
 @EnableMethodSecurity
 class SecurityConfiguration(
   private val objectMapper: ObjectMapper,
-  private val jwtAuthenticationFilter: JwtAuthenticationFilter
+  private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+  @Value("\${spring.jwt.frontendUrl}") private val frontendUrl: String
 ) {
 
   private val userUnsecuredEndpoints =
@@ -76,6 +78,7 @@ class SecurityConfiguration(
         allowedHeaders = listOf("*")
         exposedHeaders = listOf("Content-Disposition")
         allowedOriginPatterns = listOf("*")
+        allowedOrigins = listOf(frontendUrl)
         allowCredentials = true
       }
     }
