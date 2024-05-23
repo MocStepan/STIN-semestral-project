@@ -6,7 +6,6 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.io.Decoders
 import io.jsonwebtoken.security.Keys
 
-
 class JwtService(
   secret: String
 ) {
