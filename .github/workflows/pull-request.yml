@@ -1,0 +1,71 @@
+name: STIN - Build and test backend and frontend on pull request
+on:
+  push:
+    branches: 
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+permissions:
+  contents: read
+jobs:
+  build-backend:
+    name: Build and test backend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    container:
+      image: public.ecr.aws/docker/library/gradle:jdk17
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run tests
+        run: ./gradlew check --no-daemon
+      - name: Expose coverage report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-report
+          path: build/reports/jacoco/test/html/jacocoTestReport.xml
+  build-frontend:
+    name: Build and test frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    container:
+      image: public.ecr.aws/docker/library/node:20.18.3-slim
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build
+      - name: Run tests
+        run: npm run test
+      - name: Expose coverage report as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-report
+          path: coverage/cobertura-coverage.xml
+  coverage-report:
+    name: Download coverage reports
+    runs-on: ubuntu-latest
+    needs: 
+      - build-backend
+      - build-frontend
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*-report"
+          path: reports
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          flags: frontend, backend
+          files: reports/cobertura-coverage.xml, reports/jacocoTestReport.xml
+
+
